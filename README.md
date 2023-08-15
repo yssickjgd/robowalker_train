@@ -1,30 +1,49 @@
 # 教程文档
 
+**省流版**
+
+>   配套教学视频
+>
+>   https://space.bilibili.com/337732684/channel/collectiondetail?sid=1043942
+>
+>   环境配置安装包
+>
+>   http://home.ustc.edu.cn/~yssickjgd
+>
+>   配套代码与其他相关资料 ( 内容完全一致, 根据网络状况酌情下载 )
+>
+>   https://git.lug.ustc.edu.cn/yssickjgd/robowalker_train
+>
+>   https://github.com/yssickjgd/robowalker_train
+>
+>   配套PPT资料
+>
+>   https://rec.ustc.edu.cn/share/c8b3bbc0-32bc-11ee-98d2-2330cf7972b8
+
 ## 1. 教程目录
 
-1.  电控
-    1.  电控简介
+1.  电控 ( electrical )
+    1.  电控简介 ( electrical introduction )
         1.  电控导论
-    2.  STM32CubeMX基础
-        1.  STM32单片机环境配置与基础教学
+    2.  STM32CubeMX基础 ( stm32cubemx basic )
+        1.  环境配置与基础教学
         2.  GPIO输出电压
         3.  EXTI外部中断
         4.  TIM定时器中断
         5.  UART通信
         6.  PWM呼吸灯
         7.  ADC测电压
-    3.  电机控制教程
-        1.  导论
+    3.  电机控制 ( motor control )
         2.  C++
         3.  CAN通信
         4.  CAN接口与电机初步控制
         5.  UART接口与串口绘图
         6.  串口绘图接口与电机反馈
         7.  PID算法
-        8.  PID算法接口与电机闭环控制
+        8.  PID接口与电机闭环控制
         9.  电机接口与多环PID
         10.  动态目标与前馈PID
-    4.  架构开源代码教学
+    4.  架构开源代码教学 ( code framework )
         1.  Git基础操作教学
         2.  电控嵌入式架构分析
         3.  USB虚拟串口
@@ -39,25 +58,25 @@
         12.  模块层之发射机构
         13.  交互层
         14.  任务层
-    5.  PCB电路板设计教程
+    5.  PCB电路板设计教程 ( pcb design )
         1.  立创EDA基本操作教学
         2.  简易分电板
         3.  超级电容控制理论
         4.  超级电容开源电路
         5.  超级电容开源代码
-2.  电控眼里的裁判系统
+2.  电控眼里的比赛 ( referee )
     1.  官方软件的获取与使用
     2.  比赛通用规则解读
     3.  裁判系统接线规则
     4.  裁判系统协议补充说明
-3.  电控与机械组
+3.  电控与机械组 ( mechanical )
     1.  机械组工作内容
     2.  Solidworks建模基本方法
     3.  Solidworks导出加工图
     4.  常见的设计技巧
     5.  常见的加工工艺
     6.  兵种开源图纸
-4.  电控与视觉算法组
+4.  电控与视觉算法组 ( vision algorithm )
     1.  视觉算法组工作内容
     2.  环境配置
     3.  自瞄基本策略
@@ -65,7 +84,7 @@
     5.  视觉开源代码
     6.  哨兵巡航与击打策略
     7.  哨兵上位机开源代码
-5.  宣传运营相关内容
+5.  宣传运营相关内容 ( operation )
     1.  从零开始建立一个战队
     2.  交流平台汇总
     3.  官方资料的获取渠道
@@ -78,39 +97,19 @@
 
 ## 2. 教程必要说明
 
->   **省流版**
->
->   >   配套教学视频
->   >
->   >   https://space.bilibili.com/337732684/channel/collectiondetail?sid=1043942
->
->   >   环境配置安装包
->   >
->   >   http://home.ustc.edu.cn/~yssickjgd
->
->   >   配套代码与其他相关资料
->   >
->   >   https://git.lug.ustc.edu.cn/yssickjgd/robowalker_train
->
->   >   配套PPT资料
->   >
->   >   https://rec.ustc.edu.cn/share/c8b3bbc0-32bc-11ee-98d2-2330cf7972b8
-
 -   前置知识需要, 且仅需要**C语言**
 -   **配套教学视频**链接
--   https://space.bilibili.com/337732684/channel/collectiondetail?sid=1043942
+    -   https://space.bilibili.com/337732684/channel/collectiondetail?sid=1043942
     -   由于讲义会不定期更新或修正内容, 因此B站视频教学可供参考, 具体章节目录请依照最新版讲义内容
--   对于必要的内容修订与增添, B站视频也会适当修改
+    -   对于必要的内容修订与增添, B站视频也会适当修改
 -   **环境配置安装包**在本人的中国科大FTP个人主页
--   http://home.ustc.edu.cn/~yssickjgd
+    -   http://home.ustc.edu.cn/~yssickjgd
     -   进入该网站后点击"机器人社团/战队电控环境配置"中, 即可找到
 
--   **配套代码与其他相关资料**在中国科大Linux用户协会的gitlab上
-
-    -   https://git.lug.ustc.edu.cn/yssickjgd/robowalker_train
-
-    -   由于Gitee平台有容量限制, 但本仓库容量较大, 因此该项目于202308242000转移至中国科大校内Git平台https://git.lug.ustc.edu.cn中. *原Gitee链接仍有效*
-
+-   **配套代码与其他相关资料**一式二份在Github与中国科大Linux用户协会的Gitlab
+-   https://git.lug.ustc.edu.cn/yssickjgd/robowalker_train
+    -   https://github.com/yssickjgd/robowalker_train
+-   由于Gitee平台有容量限制, 但本仓库容量较大, 因此该项目于202308242000转移至Github以及中国科大Linux用户协会校内Gitlab平台中. *原Gitee链接仍有效, 只是不保持更新*
     -   对于STM32CubeMX基础的补充
 
         -   为资料统一且查找方便, 该教程修订到本教程系列PPT中, 其原链接如下
