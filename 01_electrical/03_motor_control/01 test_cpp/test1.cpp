@@ -26,8 +26,10 @@ void int_constrain(int *x, int Min, int Max)
 
 int main()
 {
-	int a = 2000;
-	Math_Constrain(&a, 100, 200);
+	float a = 2000;
+	Math_Constrain(&a, 100.0f, 200.0f);
+	int b = 2000;
+	Math_Constrain(&b, 100, 200);
 //	constrain(&a, 100, 200); 
 	return(a);
 } 

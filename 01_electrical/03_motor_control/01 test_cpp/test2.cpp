@@ -8,7 +8,7 @@ public:
     void Init(char *__name, int __year); // 其实还有一种更标准或者说更适宜的初始化方式, 但理解起来可能有些复杂 
     void PrintInfo();
     
-    // 一种成员函数的声明方式 
+    // 一种成员函数的声明方式, 顺便定义了 
     void foo()
     {
     	printf("%d\n", 1);
@@ -39,7 +39,6 @@ void student::PrintInfo()
 class student_with_department : public student
 {
 public:
-    void Init(char *__name, int __year, int __department); // 重名函数会覆盖, 之前的不能用了 
     // 重载示例 
     void PrintInfo(int a, int b)
     {
@@ -53,17 +52,15 @@ protected:
 	int department;
 };
 
-void student_with_department::Init(char *__name, int __year, int __department)
-{
-	name = __name;
-	year = __year;
-	department = __department; 
-}
-
 int main()
 {
+//	student student0; 
+//	student0.Init("123", 2023);
+//	student0.PrintInfo();
+//	(&student0)->PrintInfo();
+
 	student_with_department newstudent;
-	newstudent.Init("Yij", 2018, 6);
+	newstudent.Init("Yij", 2018);
 	newstudent.PrintInfo(1, 1);
 	newstudent.PrintInfo(1, 1, 1);
 } 
