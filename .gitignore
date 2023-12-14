@@ -1,2 +1,2 @@
-*.pptx
-临时小经验.txt
+robowalker_train_slides/*
+!robowalker_train_slides/修订日志.md
