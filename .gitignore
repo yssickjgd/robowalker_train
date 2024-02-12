@@ -14,7 +14,7 @@ robowalker_train_slides/*
 !/**/MDK-ARM/startup_*.s
 
 # armgcc-cmake工程忽略项
-*/**/cmake-build-debug
+/**/cmake-build-debug
 
 # VsCode编辑器忽略项
 /**/.vscode
