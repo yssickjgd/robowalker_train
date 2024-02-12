@@ -1,5 +1,24 @@
+# 忽略培训PPT更新
 robowalker_train_slides/*
+# 不忽略PPT修订日志, 修订日志内有PPT下载链接
 !robowalker_train_slides/修订日志.md
-临时小经验.txt
-培训流程.txt
-培训视频
+
+# 一般可执行文件
+/**/*.exe
+
+# Keil-DefaultCompiler工程忽略项
+/**/MDK-ARM/*
+# 不忽略Keil工程配置文件
+!/**/MDK-ARM/*.uvoptx
+!/**/MDK-ARM/*.uvprojx
+!/**/MDK-ARM/startup_*.s
+
+# armgcc-cmake工程忽略项
+*/**/cmake-build-debug
+
+# VsCode编辑器忽略项
+/**/.vscode
+/**/workspace.code-workspace
+
+# Clion编辑器忽略项
+/**/.idea
