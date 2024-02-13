@@ -100,9 +100,9 @@ void CAN_Filter_Mask_Config(CAN_HandleTypeDef *hcan, uint8_t Object_Para, uint32
 
   if ((Object_Para & 0x02))
   {
-    // 数据帧
+    // 标准帧
     // 掩码后ID的高16bit
-    can_filter_init_structure.FilterIdHigh = ID << 3 << 16;
+    can_filter_init_structure.FilterIdHigh = ID << 3 >> 16;
     // 掩码后ID的低16bit
     can_filter_init_structure.FilterIdLow = ID << 3 | ((Object_Para & 0x03) << 1);
     // ID掩码值高16bit
@@ -112,7 +112,7 @@ void CAN_Filter_Mask_Config(CAN_HandleTypeDef *hcan, uint8_t Object_Para, uint32
   }
   else
   {
-    // 遥控帧
+    // 扩展帧
     // 掩码后ID的高16bit
     can_filter_init_structure.FilterIdHigh = ID << 5;
     // 掩码后ID的低16bit
