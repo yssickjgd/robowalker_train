@@ -86,7 +86,7 @@ enum Enum_Motor_DM_Control_Method
  */
 struct Struct_Motor_DM_CAN_Rx_Data_Normal
 {
-    uint8_t Reserved : 4;
+    uint8_t CAN_ID : 4;
     uint8_t Control_Status_Enum : 4;
     uint16_t Angle_Reverse;
     uint8_t Omega_11_4;
@@ -325,8 +325,6 @@ protected:
     // 内部函数
 
     void Data_Process();
-
-    void Error_Process();
 
     void Output();
 };

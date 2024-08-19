@@ -246,8 +246,6 @@ void Class_Motor_DM_Normal::CAN_RxCpltCallback(uint8_t *Rx_Data)
     Flag += 1;
 
     Data_Process();
-
-    Error_Process();
 }
 
 /**
@@ -318,14 +316,28 @@ void Class_Motor_DM_Normal::TIM_Alive_PeriodElapsedCallback()
  */
 void Class_Motor_DM_Normal::TIM_Send_PeriodElapsedCallback()
 {
-    Math_Constrain(&Control_Angle, -Angle_Max, Angle_Max);
-    Math_Constrain(&Control_Omega, -Omega_Max, Omega_Max);
-    Math_Constrain(&Control_Torque, -Torque_Max, Torque_Max);
-    Math_Constrain(&Control_Current, -Current_Max, Current_Max);
-    Math_Constrain(&K_P, 0.0f, 500.0f);
-    Math_Constrain(&K_D, 0.0f, 5.0f);
+    if (Rx_Data.Control_Status == Motor_DM_Status_ENABLE)
+    {
+        // 电机在线, 正常控制
+        Math_Constrain(&Control_Angle, -Angle_Max, Angle_Max);
+        Math_Constrain(&Control_Omega, -Omega_Max, Omega_Max);
+        Math_Constrain(&Control_Torque, -Torque_Max, Torque_Max);
+        Math_Constrain(&Control_Current, -Current_Max, Current_Max);
+        Math_Constrain(&K_P, 0.0f, 500.0f);
+        Math_Constrain(&K_D, 0.0f, 5.0f);
 
-    Output();
+        Output();
+    }
+    else if (Rx_Data.Control_Status == Motor_DM_Status_DISABLE)
+    {
+        // 电机可能掉线, 使能电机
+        CAN_Send_Enter();
+    }
+    else
+    {
+        // 电机错误, 发送清除错误帧
+        CAN_Send_Clear_Error();
+    }
 }
 
 /**
@@ -338,6 +350,12 @@ void Class_Motor_DM_Normal::Data_Process()
     int32_t delta_encoder;
     uint16_t tmp_encoder, tmp_omega, tmp_torque;
     Struct_Motor_DM_CAN_Rx_Data_Normal *tmp_buffer = (Struct_Motor_DM_CAN_Rx_Data_Normal *)CAN_Manage_Object->Rx_Buffer.Data;
+
+    // 电机ID不匹配, 则不进行处理
+    if(tmp_buffer->CAN_ID != (CAN_Tx_ID & 0x0f))
+    {
+        return;
+    }
 
     // 处理大小端
     Math_Endian_Reverse_16((void *)&tmp_buffer->Angle_Reverse, &tmp_encoder);
@@ -369,28 +387,6 @@ void Class_Motor_DM_Normal::Data_Process()
 
     // 存储预备信息
     Rx_Data.Pre_Encoder = tmp_encoder;
-}
-
-/**
- * @brief 错误处理过程
- *
- */
-void Class_Motor_DM_Normal::Error_Process()
-{
-    if (Rx_Data.Control_Status == Motor_DM_Status_ENABLE)
-    {
-        // 电机在线, 无需处理
-    }
-    else if (Rx_Data.Control_Status == Motor_DM_Status_DISABLE)
-    {
-        // 电机可能掉线, 使能电机
-        CAN_Send_Enter();
-    }
-    else
-    {
-        // 电机错误, 发送清除错误帧
-        CAN_Send_Clear_Error();
-    }
 }
 
 /**
