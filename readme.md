@@ -56,7 +56,7 @@
         2.  ==Git基础操作教学==
         3.  ==CLion开发环境配置==
         4.  ==gcc, Make与CMake==
-        6.  番外篇 数学加速库arm_math.h的引入
+        6.  ==番外篇 数学加速库arm_math.h的引入==
         7.  番外篇 Cube生成CMake工程
     5.  底盘篇 ( chassis )
         1.  设备层的遥控器模块
