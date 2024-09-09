@@ -28,7 +28,7 @@
     1.  ==电控简介 ( electrical_introduction )==
         1.  ==电控导论==
         2.  ==番外篇 如何去提问==
-    2.  STM32CubeMX基础 ( stm32cubemx_basic )
+    2.  ==STM32CubeMX基础 ( stm32cubemx_basic )==
         1.  ==环境配置与基础教学==
         2.  ==GPIO输出电压==
         3.  ==EXTI外部中断==
@@ -37,7 +37,7 @@
         5.  ==UART通信==
         6.  ==PWM呼吸灯==
         7.  ==ADC测电压==
-    3.  电机控制 ( motor_control )
+    3.  ==电机控制 ( motor_control )==
         1.  ==C++==
             -   ==作业==
         2.  ==CAN通信==
@@ -51,7 +51,7 @@
             - ==作业==
         10.  ==多电机控制==
         11.  ==番外篇 达妙电机控制==
-    4.  工具与开发基础知识 ( develop_tools )
+    4.  ==开发工具篇 ( develop_tools )==
         1.  ==Markdown基础教学==
         2.  ==Git基础操作教学==
         3.  ==CLion开发环境配置==
