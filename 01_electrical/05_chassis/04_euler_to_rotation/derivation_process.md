@@ -885,15 +885,17 @@ $$
 >
 >\end{pmatrix}
 >$$
+>由于坐标系是随物体运动而变换的, 因此是内旋, 遵循[结论6](#结论6)
+>
 >因此, 云台的旋转矩阵为
 >$$
->G = {^CG} C = \begin{pmatrix}
+>G = C {^CG} = \begin{pmatrix}
 >
->	-\frac{1}{2} & -\frac{\sqrt{3}}{2} & 0 \\
+>	-\frac{1}{8} & -\frac{3}{4} & \frac{3\sqrt{3}}{8} \\
 >
->	\frac{\sqrt{3}}{2}  & -\frac{1}{2} & 0 \\
+>	\frac{3}{4}  & -\frac{1}{2} & -\frac{\sqrt{3}}{4} \\
 >
->	0 & 0 & 1 \\
+>	\frac{3\sqrt{3}}{8} & \frac{\sqrt{3}}{4} & \frac{\sqrt{5}}{8} \\
 >
 >\end{pmatrix}
 >$$
