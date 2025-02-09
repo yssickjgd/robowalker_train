@@ -1,7 +1,0 @@
-24赛季舵轮步兵
-    开发环境：CLion
-    https://git.lug.ustc.edu.cn/yssickjgd/robowalker2024bottominfantry
-
-23赛季哨兵
-    开发环境：Keil
-    https://git.lug.ustc.edu.cn/yssickjgd/robowalker_2023_sentry

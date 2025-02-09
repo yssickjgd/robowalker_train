@@ -17,8 +17,8 @@
   - 世界坐标系
     - 世界坐标系用$E$表示
     - 世界坐标系的基
-      - 二维坐标系为$\overrightarrow{e_x} = (1, 0), \overrightarrow{e_y} = (0, 1)$
-      - 三维坐标系为$\overrightarrow{e_x} = (1, 0, 0), \overrightarrow{e_y} = (0, 1, 0), \overrightarrow{e_z} = (0, 0, 1)$
+      - 二维坐标系为$\overrightarrow{e}_x = (1, 0), \overrightarrow{e}_y = (0, 1)$
+      - 三维坐标系为$\overrightarrow{e}_x = (1, 0, 0), \overrightarrow{e}_y = (0, 1, 0), \overrightarrow{e}_z = (0, 0, 1)$
   - 向量与矩阵左上角的角标表示该矩阵是在某坐标系下而言的, 如$^A\overrightarrow{p}$可以表示坐标系$A$下向量$\overrightarrow{p}$的坐标
     - 世界坐标系下的向量, 左上角的角标可以省略. 如$^E\overrightarrow{p} = \overrightarrow{p}$
 
@@ -274,7 +274,7 @@ $$
 
 **对于二维世界坐标系下的一个向量 $\overrightarrow{p}$, 将坐标系旋转$\alpha$得到新的坐标系A, 设该向量在新坐标系下的坐标为$^A\overrightarrow{p}$, 则**
 $$
-R(\alpha) ^A\overrightarrow{p} = \overrightarrow{p}
+R(\alpha) \ {^A\overrightarrow{p}} = \overrightarrow{p}
 $$
 > 证明:
 > 
@@ -284,7 +284,7 @@ $$
 > $$
 > 两边同时乘上$R(\alpha)$
 > $$
-> R(\alpha) ^A\overrightarrow{p} = \overrightarrow{p}
+> R(\alpha) \ {^A\overrightarrow{p}} = \overrightarrow{p}
 > $$
 
 <a id="结论3"></a>
@@ -295,7 +295,7 @@ $$
 $$
 R(\alpha) = \begin{pmatrix}
  
-	\overrightarrow{a_x} & \overrightarrow{a_y} \\
+	\overrightarrow{a}_x & \overrightarrow{a}_y \\
  
  \end{pmatrix}
  
@@ -307,7 +307,7 @@ $$
 >
 > 设新基为$\overrightarrow{a_x}$和$\overrightarrow{a_y}$, 根据向量在不同基下的不同表示, 显然有
 > $$
-> ^Ap_x \overrightarrow{a_x} + {^Ap_y} \overrightarrow{a_y} = p_x \overrightarrow{e_x} + p_y \overrightarrow{e_y} = \begin{pmatrix}
+> ^Ap_x \overrightarrow{a}_x + {^Ap_y} \overrightarrow{a}_y = p_x \overrightarrow{e}_x + p_y \overrightarrow{e}_y = \begin{pmatrix}
 > 
 > 	p_x \\
 > 	
@@ -319,9 +319,9 @@ $$
 > $$
 > \begin{pmatrix}
 > 
-> 	\overrightarrow{a_x} & \overrightarrow{a_y} \\
+> 	\overrightarrow{a}_x & \overrightarrow{a}_y \\
 > 
-> \end{pmatrix} {^A\overrightarrow{p}} = \overrightarrow{p}
+> \end{pmatrix} \ {^A\overrightarrow{p}} = \overrightarrow{p}
 > 
 > \label{向量表示旋转矩阵的变换}
 > $$
@@ -329,43 +329,43 @@ $$
 >
 > 根据旋转矩阵公式, 也就是公式$\eqref{旋转操作}$, 有
 > $$
-> \overrightarrow{a_x} = R(\alpha) \overrightarrow{e_x} \\
+> \overrightarrow{a}_x = R(\alpha) \overrightarrow{e}_x \\
 > 
-> \overrightarrow{a_y} = R(\alpha) \overrightarrow{e_y} \\
+> \overrightarrow{a}_y = R(\alpha) \overrightarrow{e}_y \\
 > $$
 > 将上式代入公式$\eqref{向量表示旋转矩阵的变换}$, 有
 > $$
 > \begin{pmatrix}
 > 
-> 	R(\alpha) \overrightarrow{e_x} & R(\alpha) \overrightarrow{e_y} \\
+> 	R(\alpha) \overrightarrow{e}_x & R(\alpha) \overrightarrow{e}_y \\
 > 
-> \end{pmatrix} {^A\overrightarrow{p}} = \overrightarrow{p}
+> \end{pmatrix} \ {^A\overrightarrow{p}} = \overrightarrow{p}
 > $$
 > 提出来旋转矩阵, 也就是
 > $$
 > R(\alpha) \begin{pmatrix}
 > 
-> 	 \overrightarrow{e_x} &  \overrightarrow{e_y} \\
+> 	 \overrightarrow{e}_x &  \overrightarrow{e}_y \\
 > 
-> \end{pmatrix} {^A\overrightarrow{p}} = \overrightarrow{p}
+> \end{pmatrix} \ {^A\overrightarrow{p}} = \overrightarrow{p}
 > $$
 > 由于基向量就是单位矩阵
 > $$
 > \begin{pmatrix}
 > 
-> 	 \overrightarrow{e_x} &  \overrightarrow{e_y} \\
+> 	 \overrightarrow{e}_x &  \overrightarrow{e}_y \\
 > 
 > \end{pmatrix} = I
 > $$
 > 因此化简后, 有
 > $$
-> R(\alpha) {^A\overrightarrow{p}} = \overrightarrow{p}
+> R(\alpha) \ {^A\overrightarrow{p}} = \overrightarrow{p}
 > $$
 > 结合$\eqref{向量表示旋转矩阵的变换}$, 得到关系
 > $$
 > R(\alpha) = \begin{pmatrix}
 > 
-> 	\overrightarrow{a_x} & \overrightarrow{a_y} \\
+> 	\overrightarrow{a}_x & \overrightarrow{a}_y \\
 > 
 > \end{pmatrix}
 > 
@@ -549,7 +549,7 @@ Rz(\alpha) = Yaw(\alpha) = \begin{pmatrix}
 $$
 
 $$
- Ry(\beta) = Pitch(\beta) =\begin{pmatrix}
+Ry(\beta) = Pitch(\beta) =\begin{pmatrix}
 
 	\cos(\beta) & 0 & \sin(\beta) \\
 	
@@ -738,21 +738,21 @@ $$
 >
 > 第一次旋转, 相当于在世界坐标系下绕z轴旋转, 那么$\overrightarrow{p}$的表示为
 > $$
-> \overrightarrow{p} = Yaw(\alpha) ^A\overrightarrow{p}
+> \overrightarrow{p} = Yaw(\alpha) \ {^A\overrightarrow{p}}
 > $$
 > 第二次旋转, 相当于在坐标系A下绕A的y轴旋转, 那么$^A\overrightarrow{p}$的表示为
 > $$
-> ^A\overrightarrow{p} = Pitch(\beta) ^B\overrightarrow{p}
+> ^A\overrightarrow{p} = Pitch(\beta) \ {^B\overrightarrow{p}}
 > $$
 > 第三次旋转, 相当于在坐标系B下绕B的x轴旋转, 那么$^B\overrightarrow{p}$的表示为
 > $$
-> ^B\overrightarrow{p} = Roll(\theta) ^C\overrightarrow{p}
+> ^B\overrightarrow{p} = Roll(\theta) \ {^C\overrightarrow{p}}
 > $$
 > 而$^C\overrightarrow{p}$就是三次旋转后对应的坐标系下向量$\overrightarrow{p}$的表达
 >
 > 将上述三式迭代进去
 > $$
-> \overrightarrow{p} = Yaw(\alpha) Pitch(\beta) Roll(\theta) ^C\overrightarrow{p}
+> \overrightarrow{p} = Yaw(\alpha) Pitch(\beta) Roll(\theta) \ {^C\overrightarrow{p}}
 > $$
 > 根据[结论2](#结论2), 显然得知这三个矩阵连乘就是旋转矩阵, 因此有
 > $$
@@ -813,7 +813,7 @@ $$
 >
 > 这个绑定关系就是: z轴方向向量是一样的, 也就是
 > $$
-> \overrightarrow{c_z} = \overrightarrow{s_z}
+> \overrightarrow{c}_z = \overrightarrow{s}_z
 > $$
 > 根据上一题, 我们的底盘旋转矩阵已知, 也就是矩阵$C$是已知的
 >
@@ -841,7 +841,7 @@ $$
 > $$
 > 因此
 > $$
-> \overrightarrow{s_z} = \begin{pmatrix}
+> \overrightarrow{s}_z = \begin{pmatrix}
 > 
 > 	\cos(\alpha_{S}) \sin(\beta_{S}) \\
 > 
@@ -849,7 +849,7 @@ $$
 > 
 > 	\cos(\beta_{S}) \\
 > 
-> \end{pmatrix} = \overrightarrow{c_z}
+> \end{pmatrix} = \overrightarrow{c}_z
 > $$
 > $\overrightarrow{c_z}$和$\beta_S$已知, $\alpha_S$求起来轻而易举
 >
