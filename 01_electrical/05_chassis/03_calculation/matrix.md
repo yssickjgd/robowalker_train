@@ -28,7 +28,7 @@ $$
 \end{pmatrix}
 $$
 
-运动学解算公式
+​		运动学解算公式
 $$
 \frac{s}{4}\begin{pmatrix}
     1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 \\
@@ -58,7 +58,7 @@ $$
 \end{pmatrix}
 $$
 
-运动学解算公式
+​		运动学解算公式
 $$
 \frac{s}{4}\begin{pmatrix}
     -\sqrt{2} & -\sqrt{2} & \sqrt{2} & \sqrt{2} \\
@@ -87,7 +87,7 @@ $$
 \end{pmatrix}
 $$
 
-运动学解算公式
+​		运动学解算公式
 $$
 \frac{s}{4}\begin{pmatrix}
     -1 & -1 & 1 & 1 \\
