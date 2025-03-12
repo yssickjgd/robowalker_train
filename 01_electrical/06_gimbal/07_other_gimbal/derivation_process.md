@@ -44,6 +44,7 @@
   
   \label{旋转矩阵变换分析}
   $$
+  
 
 ## 2 三轴YRP云台的控制
 
@@ -66,6 +67,7 @@
     \label{递推公式}
     $$
 
+    
   - 公式$\eqref{递推公式}$中
 
     - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
@@ -99,6 +101,7 @@
     \label{角度补偿}
     $$
 
+    
 - 公式$\eqref{角度补偿}$中
 
   - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
@@ -122,3 +125,4 @@
     	- \sin(\theta) \ {^C\omega_z}
     $$
     
+

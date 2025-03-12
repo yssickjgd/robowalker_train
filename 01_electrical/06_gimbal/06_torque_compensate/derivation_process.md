@@ -32,12 +32,42 @@
 
   - 如图所示为$\alpha = -\frac{\pi}{2}, \beta= -\frac{\pi}{4}$的情形
 
-    <img src="markdown.assets/坐标系示意图.jpg" alt="坐标系示意图" style="zoom: 33%;" />
+    <img src="markdown.assets/坐标系示意图.jpg" alt="坐标系示意图" style="zoom: 33%;" id="坐标系示意图" />
 
 - 陀螺仪数据
 
   - 底盘陀螺仪绑定在底盘$C$上, 当前角速度为$^C_O\overrightarrow{\omega}_C$, 三个轴的角速度分量分别简写为${^C\omega_x}, \ {^C\omega_y}, \ {^C\omega_z}$, ==当前加速度为$^C_O\overrightarrow{a}_C$, 三个轴的加速度分量分别简写为${^Ca_x}, \ {^Ca_y}, \ {^Ca_z}$==
   - 云台陀螺仪绑定在云台Pitch端$P$上, 当前角速度为$^P_O\overrightarrow{\omega}_P$, 三个轴的角速度分量分别简写为${^P\omega_x}, \ {^P\omega_y}, \ {^P\omega_z}$, ==当前加速度为$^P_O\overrightarrow{a}_P$, 三个轴的加速度分量分别简写为${^Pa_x}, \ {^Pa_y}, \ {^Pa_z}$==
+  
+- 对于电动的机械结构, 我们这样分析
+
+  - 平动的机构, 如电推杆, 它提供的是力, 也就是$\overrightarrow{f}$
+  - 转动的机构, 如关节电机, 它提供的是扭矩, 也就是$\overrightarrow{n}$
+  - 此外, 我们默认我们的机械结构是有足够刚度的, 在非机构运动方向上可提供或承受的力和扭矩都是无穷大
+
+- 对于我们的机器人, 我们这样分析
+
+  - 整车包含底盘, 云台Yaw, 云台Pitch三部分主体机构, [如图所示](#坐标系示意图)
+  - 关于质量的分析
+    
+    - 我们可以通过直接测量, 或工程制图软件计算等方法直接获取Pitch轴所固连机构的质量
+    - 对于Yaw轴所固连机构的质量, 我们认为是0
+  - 关于惯量矩阵的分析
+    
+    - 我们可以粗略将Pitch建模为长度$l$, 质量均匀为$m$, 重心居中的杆 ( 注意这里是杆, 不是圆柱体也不是长方体 ) , 而后利用大学物理相关知识可计算出其重心的惯量矩阵. 比如, 当杆沿x轴时, 其惯量矩阵为
+      $$
+      I = \begin{pmatrix}
+      
+      	0 & 0 & 0 \\
+      	
+      	0 & \frac{ml^2}{12} & 0 \\
+      	
+      	0 & 0 & \frac{ml^2}{12} 
+      
+      \end{pmatrix}
+      $$
+  
+  
 
 ## 2 重力补偿
 
@@ -56,14 +86,13 @@
   <img src="markdown.assets/重心与枪线.jpg" alt="img" style="zoom: 15%;" />
 
 - 假设重心相对枪线的旋转角度为$\gamma$, 如上图所示的$\gamma = -\frac{\pi}{12}$. 结合云台的当前Pitch电机角度为$\beta$, 我们可以得知, 重力矩大小$t$满足如下关系
-
-$$
-t = m g r \cos(\beta + \gamma)
-
-\label{最开始的公式}
-$$
+  $$
+  t = m g r \cos(\beta + \gamma)
+  
+  \label{最开始的公式}
+  $$
+  
 - 其中, $m$是云台Pitch轴所固连的负载的质量, $g$是重力加速度, r是云台Pitch轴所固连的负载的重心与坐标系$V$的原点的距离, 也就是图中的蓝色虚线的长度. 而$\beta$在开篇提过, 就是云台Pitch轴电机的角度
-
 - 有两种计算重力补偿参数的方法, 后文进行详细讲解
 
 #### 2.1.1 测量法
@@ -75,11 +104,10 @@ $$
 #### 2.1.2 标定法
 
 - 更进一步地, 我们可以有
-
-$$
-q + k \cos(\beta + \gamma) = 0
-$$
-
+  $$
+  q + k \cos(\beta + \gamma) = 0
+  $$
+  
 - 其中, $q$是云台Pitch轴电机因重力补偿而输出的扭矩, 待定系数$k=mgr$. 只要我们知道了$k, \gamma$的大小, 重力补偿就完成了
 
 - 具体地, 我们可以给云台电机不同的输出扭矩$q$, 比如$0.2Nm, 0.5Nm$等等, 通过手拨云台Pitch轴来探测云台能稳定的角度范围, 从而获取一系列的$q$与$\beta$的映射关系
@@ -113,9 +141,11 @@ $$
 
 - 在这种定义的情况下, 我们需要通过底盘陀螺仪获取底盘的旋转矩阵$^OC$, 结合底盘电机和云台电机角度进行更为细致的分析
 
-- 在上一节中, 我们用更合理的建模, 认为重心的位置是一个待测量的量
+- 在上一节中, 我们用更合理的建模, 且可以通过标定法得出Pitch所固连机构的重心的位置以及质量
 
-- 从这一部分开始直到本篇文章结束, 我们认为==重心在每个机构的末端==. 即云台Yaw轴重心就在坐标系$Y$的原点, 云台Pitch轴重心就在坐标系$P$的原点
+- 本小节直到本文结束, 我们认为坐标系$P$的原点在云台Pitch轴重心, x轴方向为坐标系$Y$原点指向云台Pitch轴重心, y轴方向不变, z轴方向根据右手定则适配即可, 如下图所示
+
+  <img src="markdown.assets/2.2坐标系.jpg" alt="img" style="zoom:25%;" />
 
 - 接下来, 我们计算不同转轴上, 重力对Pitch轴所固连机构作用产生的扭矩
 
@@ -128,58 +158,47 @@ $$
     $$
     {^Y\overrightarrow{n}_P} = -m \ {^Y\overrightarrow{g}} \times \ {^Y_P\overrightarrow{r}_C}
     $$
-
-  - 其中
-
+  
+- 其中
+  
     - $m$是云台Pitch轴固连负载的质量
-    - ${^P\overrightarrow{g}}$, 是坐标系$P$下的重力加速度, 即${^PY} \ {^YC} \ {^CO} {^O\overrightarrow{g}}$
+  - ${^P\overrightarrow{g}}$, 是坐标系$P$下的重力加速度, 即${^PY} \ {^YC} \ {^CO} {^O\overrightarrow{g}}$
       - 其中
         - $^CO$, 由底盘陀螺仪获取欧拉角后计算而得
         - ${^YC}$, 由云台Yaw电机角度计算得出, 即$Yaw^T(\alpha)$
-        - ${^PY}$, 由云台Pitch电机角度计算得出, 即$Pitch^T(\beta)$
+        - ${^PY}$, 由云台Pitch电机角度计算得出, 即$Pitch^T(\beta + \gamma)$
         - ${^O\overrightarrow{g}}$, 当地重力加速度, 一般默认$(0, 0, -9.8)$
     - ${^Y\overrightarrow{g}}$, 是坐标系$P$下的重力加速度, 即${^YC} \ {^CO} {^O\overrightarrow{g}}$
       - 其中
         - $^CO$, 由底盘陀螺仪获取欧拉角后计算而得
         - ${^YC}$, 由云台Yaw电机角度计算得出, 即$Yaw^T(\alpha)$
         - ${^O\overrightarrow{g}}$, 当地重力加速度, 一般默认$(0, 0, -9.8)$
-    - ${^P\overrightarrow{r}_Y}$, 是坐标系$P$下云台Pitch重心指向坐标系$Y$原点的向量
+    - ${^P\overrightarrow{r}_Y}$, 是坐标系$P$下云台Pitch重心指向坐标系$Y$原点的向量, 其形式为$(-?, 0, 0)$
     - ${^Y_P\overrightarrow{r}_C}$, 是坐标系$Y$下云台Pitch重心指向坐标系$C$原点的向量, 即${^YP} \ {^P\overrightarrow{r}_Y} + \ {^Y\overrightarrow{r}_C}$
-
+      - ${^Y\overrightarrow{r}_C}$, 是坐标系$Y$下云台Yaw重心指向坐标系$C$原点的向量, 其形式为$(0, 0, -?)$
+  
 - 最后, 将扭矩投影到电机所在的轴上, 即可得到云台Yaw和Pitch电机所需提供的扭矩
   $$
   n_p = {^P\overrightarrow{n}_P^T} \ \overrightarrow{e}_y \\
   
   n_y = {^Y\overrightarrow{n}_P^T} \ \overrightarrow{e}_z
   $$
-
-- 大哥, 搞定! 
+  
 
 ## 3 加速度补偿
 
-> **这一部分比较进阶且硬核, 只是为了让大家训练一种力控的思想, 其实上面的简易的重力补偿就已经足够RM电控使用了**
+> 这一部分比较进阶且硬核, 看不懂没关系, 图一乐, 但认真看了绝对有收获
+>
+> 我在这里只是为了让大家训练一种力控的思想, 其实上面的简易的重力补偿就已经足够RM电控使用了
 
-- 为便于进一步分析, 从这里开始, 我们重新定义坐标系$P$的$x$轴方向为==坐标系$Y$原点指向云台Pitch重心的方向==. 这就意味着, 云台的Pitch角度和角速度的参考==不再是云台枪线相对于坐标系$Y$的$x$轴俯仰角==, 而是==云台重心与坐标系$Y$原点连线相对于坐标系$Y$的$x$轴俯仰角==. 换言之, $\beta$的定义发生改变, 变成了原本的$\beta + \gamma$. 而我们对现在坐标系$P$进行矢量分析时, 需要额外对以原本坐标系$P$为参考的矢量 ( 如速度矢量 ) 乘上一个旋转矩阵, 也就是$Pitch^T(\gamma)$进行转换. 如下图所示, 按照原本的定义, $\beta = 0$, 按照现在的定义, $\beta = -\frac{\pi}{12}$
+- 我们在之前的内容中, 已经掌握了通过标定法得出Pitch所固连机构的重心的位置以及质量
 
-- 一言蔽之: 云台的Pitch坐标系变了
+- 我们再温习一下这个坐标系的图
 
-  <img src="markdown.assets/重心与枪线.jpg" alt="img" style="zoom: 25%;" />
+  <img src="markdown.assets/2.2坐标系.jpg" alt="img" style="zoom:25%;" />
 
-- 对于电动的机械结构, 我们这样分析
+  
 
-  - 平动的机构, 如电推杆, 它提供的是力, 也就是$\overrightarrow{f}$
-  - 转动的机构, 如关节电机, 它提供的是扭矩, 也就是$\overrightarrow{n}$
-  - 此外, 我们默认我们的机械结构是有足够刚度的, 在非机构运动方向上可提供或承受的力和扭矩都是无穷大
-
-- 对于我们的机器人, 我们这样分析
-
-  - 整车包含底盘, 云台Yaw, 云台Pitch三部分主体机构
-  - 关于重心的分析
-    - 我们可以默认云台Yaw重心在坐标系$C$和坐标系$P$的中点, 云台Pitch重心可通过[2.1.2 标定法](#2.1.2 标定法)的方式获取
-  - 关于质量的分析
-    - 我们可以通过直接测量, 或工程制图软件计算等方法直接获取
-  - 关于惯量矩阵的分析
-    - 我们可以粗略将Yaw和Pitch建模为质量均匀且重心居中的杆 ( 注意这里是杆, 不是圆柱体也不是长方体 ) , 而后利用大学物理相关知识计算过重心且方向分别与坐标系$Y$和$P$一致的惯量矩阵
 
 ### 3.1 推几个公式
 
@@ -241,6 +260,8 @@ $$
     R (\overrightarrow{a} \times \overrightarrow{b})
     	= R (\overrightarrow{a}) \times R (\overrightarrow{b})
     $$
+    
+    
     这里不给出证明过程, 感兴趣同学可自行证明
 
 #### 3.1.2 旋转矩阵, 惯量矩阵, 角速度叉乘对时间的求导
@@ -253,7 +274,7 @@ $$
 
 - 既然旋转矩阵是时间的函数, 我们先推一下旋转矩阵对时间求导的结果, 后面或许用得到 ( 显然用得到 ) 
 
-- 假设这样一个场景, 我们用来推**旋转矩阵对时间的导数**
+- 假设这样一个场景, 我们用来推旋转矩阵对时间的导数
 
   - 一个从坐标系$A$到坐标系$B$的旋转矩阵$^AB$, 简记为$R$, 即Rotation, 
 
@@ -269,20 +290,21 @@ $$
     \overrightarrow{\omega} \times (R \overrightarrow{q}) = \overrightarrow{\omega} \times R \overrightarrow{q}
     $$
     
-  - 因此有
-  $$
+- 因此有
+    $$
     \frac{dR}{dt} = \overrightarrow{\omega} \times R
-  $$
-  
-- 我们还可以形式化地推广到**惯量矩阵对时间求导**, 这里暂不给出证明过程
+    $$
+    
+- 我们还可以形式化地推广到惯量矩阵对时间求导, 这里暂不给出证明过程
   $$
   \frac{dI}{dt} = \overrightarrow{\omega} \times I
   $$
 
-- 此外, 对于**角速度叉乘**这个整体, 我们同样可以把它当成矩阵一样对时间求导
+- 此外, 对于角速度叉乘这个整体, 我们同样可以把它当成矩阵一样对时间求导
   $$
   \frac{d(\overrightarrow{\omega} \times)}{dt} = \overrightarrow{\alpha} \times
   $$
+  
 
 #### 3.1.3 位置的递推关系
 
@@ -300,6 +322,8 @@ $$
     ^A\overrightarrow{q} = \ {^A\overrightarrow{b}} + {^AB} \ {^B\overrightarrow{q}}
     $$
     
+  
+  
 
 #### 3.1.4 速度与角速度的递推关系
 
@@ -342,8 +366,10 @@ $$
     
   - 也就是
   $$
-    {^A\overrightarrow{v}}_Q = {^A\overrightarrow{v}}_B + {^AB} \ {^B\overrightarrow{v}_Q} + \ {^A\overrightarrow{\omega}_B} \times {^AB} \ {^B\overrightarrow{q}}
+  {^A\overrightarrow{v}}_Q = {^A\overrightarrow{v}}_B + {^AB} \ {^B\overrightarrow{v}_Q} + \ {^A\overrightarrow{\omega}_B} \times {^AB} \ {^B\overrightarrow{q}}
   $$
+  
+  
 
 - **角速度的递推关系**
 
@@ -353,6 +379,8 @@ $$
     	+ \ {^AB} \ {^B\overrightarrow{\omega}_Q}
     $$
     
+  
+  
 
 #### 3.1.5 加速度与角加速度的递推关系
 
@@ -383,23 +411,63 @@ $$
   	+ \ {^A\overrightarrow{\omega}_B} \times {^AB} \ {^B\overrightarrow{\omega}}_Q
   $$
   
+  
 
-#### 3.1.6 加速度与力, 角加速度与扭矩的关系
+#### 3.1.6 力与扭矩的递归关系
+
+- 注意! 前面讲的都是递推关系, 这里是递归关系
+
+- 现有若干个杆之间相互串接, 其交点间可以自由运动, 其基座角标为$0$, 第$i$个连杆用角标$i$表示, 如下图所示是云台的建模情况
+
+- 杆$i-1$和$i$的受力状态, 即合外力, 合外扭矩已知, 具体地
+
+  - 杆$i$, 所受的合外力${^i\overrightarrow{\phi}_i}$, 合外扭矩${^i\overrightarrow{\tau}_i}$, 末端需要提供的力${^i\overrightarrow{f}_i}$, 末端需要提供的扭矩${^i\overrightarrow{n}_i}$
+
+  - 杆$i-1$, 所受的合外力${^{i-1}\overrightarrow{\phi}_{i-1}}$, 合外扭矩${^{i-1}\overrightarrow{\tau}_{i-1}}$, 末端需要提供的力${^{i-1}\overrightarrow{f}_{i-1}}$, 末端需要提供的扭矩${^{i-1}\overrightarrow{n}_{i-1}}$
+
+  - 由于$i$代表数值符号, 之前的旋转矩阵表示法如果用到此处, 将会成为$^{i-1}i$, 不像用大写字母一样表示得明了. 因此, 本人将该种旋转矩阵表示为$^{i-1}_iR$, 即Rotation
+
+    <img src="markdown.assets/连杆受力递归公式.jpg" alt="img" style="zoom:15%;" />
+
+- 如若我们知道末端的杆需要多大的力和多大的扭矩, 我们可以依次递归到基座, 也就是底盘上
+
+- **力的递推关系**
+  $$
+  {^{i-1}\overrightarrow{f}_{i-1}} = \ {^{i-1}\overrightarrow{\phi}_{i-1}} 
+  
+  \ {^{i-1}_iR} \ {^i\overrightarrow{\phi}_i}
+  $$
+  
+- **扭矩的递推关系**
+  $$
+  {^{i-1}\overrightarrow{n}_{i-1}} = \ {^{i-1}\overrightarrow{\tau}_{i-1}} 
+  
+  \ {^{i-1}_iR} \ {^i\overrightarrow{\tau}_i} 
+  
+  \ {^{i-1}\overrightarrow{i}} \times \ {^{i-1}\overrightarrow{\phi}_{i-1}} 
+  
+  \ {^{i-1}\overrightarrow{i}} \times \ {^{i-1}_iR} \ {^i\overrightarrow{\phi}_i}
+  $$
+  
+
+#### 3.1.7 加速度与力, 角加速度与扭矩的关系
 
 - 我们在大学物理中应当学过如下两个公式, 这里直接摆过来
 
   - Newton公式, 力的作用点在重心上, 则物体受力$\overrightarrow{f}$与物体质量$m$以及物体加速度$\overrightarrow{a}$的关系为
     $$
     \overrightarrow{f} = \frac{d}{dt}(m \overrightarrow v) = m \overrightarrow a
-    $$
-  
-- Euler公式, 扭矩的作用点在重心上, 则物体受扭矩$\overrightarrow{n}$与物体惯量矩阵$I$, 物体角加速度$\overrightarrow{\alpha}$, 物体角速度$\overrightarrow{\omega}$的关系为
-    $$
-    \overrightarrow n = \frac{d}{dt}(I \overrightarrow \omega) = I \overrightarrow \alpha + \overrightarrow{\omega} \times I \overrightarrow \omega
-    
-    \label{扭矩公式}
+    \$$
     $$
     
+
+    - Euler公式, 扭矩的作用点在重心上, 则物体受扭矩$\overrightarrow{n}$与物体惯量矩阵$I$, 物体角加速度$\overrightarrow{\alpha}$, 物体角速度$\overrightarrow{\omega}$的关系为
+        $$
+        \overrightarrow n = \frac{d}{dt}(I \overrightarrow \omega) = I \overrightarrow \alpha + \overrightarrow{\omega} \times I \overrightarrow \omega
+        
+        \label{扭矩公式}
+        $$
+        
 
 ### 3.2 加速度补偿公式
 
@@ -430,7 +498,7 @@ $$
 
 - 我们再温习一下那个坐标系的图
 
-  <img src="markdown.assets/坐标系示意图.jpg" alt="坐标系示意图" style="zoom: 33%;" />
+  <img src="markdown.assets/2.2坐标系.jpg" alt="img" style="zoom:25%;" />
 
 - 对机器人各个机械结构进行分析
 
@@ -506,7 +574,7 @@ $$
       )
       $$
 
-      - ${^PY}$, 由云台Pitch电机角度计算得出, 即$Pitch^T(\beta)$
+      - ${^PY}$, 由云台Pitch电机角度与重心偏移角计算得出, 即$Pitch^T(\beta + \gamma)$
       - ${^Y\overrightarrow{p}}$, 由坐标系$Y$原点指向$P$原点的向量
       - ${^C_O\overrightarrow{v}_C}$, 云台Yaw速度
       - ${^C_O\overrightarrow{\omega}_C}$, 云台Yaw角速度
@@ -517,7 +585,7 @@ $$
       	+ \ {^P_Y\overrightarrow{\omega}_P}
       $$
 
-      - ${^PY}$, 由云台Pitch电机角度计算得出, 即$Pitch^T(\beta)$
+      - ${^PY}$, 由云台Pitch电机角度与重心偏移角计算得出, 即$Pitch^T(\beta + \gamma)$
       - ${^Y_O\overrightarrow{\omega}_Y}$, 云台Yaw角速度
       - ${^P_Y\overrightarrow{\omega}_P}$, 云台Pitch电机角速度, 即$\dot{\beta} \overrightarrow{e}_y$
 
@@ -530,7 +598,7 @@ $$
       )
       $$
 
-      - ${^PY}$, 由云台Pitch电机角度计算得出, 即$Pitch^T(\beta)$
+      - ${^PY}$, 由云台Pitch电机角度与重心偏移角计算得出, 即$Pitch^T(\beta + \gamma)$
       - ${^Y\overrightarrow{p}}$, 由坐标系$Y$原点指向$P$原点的向量
       - ${^Y_O\overrightarrow{\omega}_Y}$, 云台Yaw角速度
       - ${^Y_O\overrightarrow{a}_Y}$, 云台Yaw加速度
@@ -544,7 +612,7 @@ $$
       ) 
       	+ {^P_Y\overrightarrow{\alpha}_P}
       $$
-      - ${^PY}$, 由云台Yaw电机角度值计算得出, 即$Yaw^T(\alpha)$
+      - ${^PY}$, 由云台Pitch电机角度与重心偏移角计算得出, 即$Pitch^T(\beta + \gamma)$
       - ${^Y_O\overrightarrow{\omega}_Y}$, 云台Yaw角速度
       - ${^Y_O\overrightarrow{\alpha}_Y}$, 云台Yaw角加速度
       - ${^P_Y\overrightarrow{\omega}_P}$, 云台Pitch电机角速度, 即$\dot{\beta} \overrightarrow{e}_y$
@@ -554,25 +622,26 @@ $$
 
 - 接下来, 我们代入Newton公式和Euler公式, 求解两个云台分别所需的合外力和合扭矩
 
-- 此时, 我们再次明确, 对转动的分析, 将在各个结构的转轴上进行
+- 此时, 我们再次明确, 对转动的分析, 将在各个结构的重心上进行
 
   - 云台Yaw
     - 合外力, $^Y\overrightarrow{\phi}_Y = m_Y \ {^Y_O\overrightarrow{a}_Y}$
     - 合外扭矩, $^Y\overrightarrow{\tau}_Y = I_{Y} \ {^Y_O\overrightarrow{\alpha}_Y} + \ {^Y_O\overrightarrow{\omega}_Y} \times I_{Y} \ {^Y_O\overrightarrow{\omega}_Y}$
-  - 云台Pitch
-
+    - 由于我们认为Yaw轴所固连机构的质量是0, 因此合外力与合外扭矩这两个数值均为0
+- 云台Pitch
+  
     - 合外力, $^P\overrightarrow{\phi}_P = m_P \ {^P_O\overrightarrow{a}_P}$
     - 合外扭矩, $^P\overrightarrow{\tau}_P = I_{P} \ {^P_O\overrightarrow{\alpha}_P} + \ {^P_O\overrightarrow{\omega}_P} \times I_{P} \ {^P_O\overrightarrow{\omega}_P}$
 
 #### 3.2.3 将合外力与合外扭矩推到云台电机的扭矩
 
-- 先计算出我们需要的力和扭矩
+- 利用递归公式, 先计算出我们需要的力和扭矩
   - 云台Pitch
     - 支持力, ${^P\overrightarrow{f}_P} = \ {^P\overrightarrow{\phi}_P}$
     - 转动扭矩, ${^P\overrightarrow{n}_P} = \ {^P\overrightarrow{\tau}_P} + \ {{^P\overrightarrow{y}}} \times \ {^P\overrightarrow{\phi}_P}$
   - 云台Yaw
-    - 支持力, ${^Y\overrightarrow{f}_Y} = \ {^YP} \ {^P\overrightarrow{\phi}_P} + \ {^Y\overrightarrow{\phi}_Y}$
-    - 转动扭矩, ${^Y\overrightarrow{n}_Y} = \ {^Y\overrightarrow{\tau}_Y} + \ {^YP} \ {^P\overrightarrow{n}_P} + \ {{^Y\overrightarrow{c}}} \times \ {^Y\overrightarrow{\phi}_Y} + \ {^Y\overrightarrow{p}} \times \ {^YP} \ {^P\overrightarrow{f}_P}$
+    - 支持力, ${^Y\overrightarrow{f}_Y} = \ {^YP} \ {^P\overrightarrow{\phi}_P}$
+    - 转动扭矩, ${^Y\overrightarrow{n}_Y} = \ {^YP} \ {^P\overrightarrow{n}_P} + \ {^Y\overrightarrow{p}} \times \ {^YP} \ {^P\overrightarrow{f}_P}$
 - 计算出对应的扭矩后, 我们直接将扭矩投影到电机对应的方向上, 从而得到电机所需提供的扭矩
   - 云台Pitch
     - 投影扭矩,  $n_p = {^P\overrightarrow{n}^T_P} \ \overrightarrow{e}_y$

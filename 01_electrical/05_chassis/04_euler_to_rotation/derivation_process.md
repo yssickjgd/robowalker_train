@@ -155,10 +155,12 @@ $$
 > \end{pmatrix}
 > $$
 >
+> 
 > $$
 > \alpha = \frac{\pi}{4}
 > $$
 >
+> 
 > $$
 > R(\alpha) \overrightarrow{p} = \begin{pmatrix}
 > 
@@ -197,10 +199,12 @@ $$
 > \end{pmatrix}
 > $$
 >
+> 
 > $$
 > \alpha = \frac{\pi}{2}
 > $$
 >
+> 
 > $$
 > R(\alpha) \overrightarrow{p} = \begin{pmatrix}
 > 
@@ -222,6 +226,7 @@ $$
 > 
 > \end{pmatrix}
 > $$
+> 
 
 **练习3:**
 
@@ -239,10 +244,12 @@ $$
 > \end{pmatrix}
 > $$
 >
+> 
 > $$
 > \alpha = \frac{3\pi}{4}
 > $$
 >
+> 
 > $$
 > R(\alpha) \overrightarrow{p} = \begin{pmatrix}
 > 
@@ -548,6 +555,7 @@ Rz(\alpha) = Yaw(\alpha) = \begin{pmatrix}
  \label{yaw旋转矩阵}
 $$
 
+
 $$
 Ry(\beta) = Pitch(\beta) =\begin{pmatrix}
 
@@ -644,6 +652,7 @@ $$
 > \alpha = \frac{\pi}{2}, \beta = \frac{\pi}{4}
 > $$
 >
+> 
 > $$
 > Ry(\beta) Rz(\alpha) = \begin{pmatrix}
 > 

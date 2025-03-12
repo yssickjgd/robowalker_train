@@ -43,6 +43,7 @@
   \label{旋转矩阵变换分析}
   $$
   
+  
 - 旋转角速度分析
 
   - 我们已知底盘相对大地的角速度$^C_O\overrightarrow{\omega}_C$, 则根据高中物理推广到一般, 有如下递推公式
@@ -56,6 +57,7 @@
     \label{递推公式}
     $$
 
+    
   - 公式$\eqref{递推公式}$中
 
     - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
