@@ -7,7 +7,7 @@
 - 我们要明确
   
   - 只有在同一个坐标系下的矢量才可以进行加减运算, 否则需要转换到同一个坐标系下
-- $^A_C\overrightarrow{q}_B$表示$A$坐标系参考情况下, $B$相对于$C$下的任一矢量, C若和A相同则可以删去C
+  - $^A_C\overrightarrow{q}_B$表示$A$坐标系参考情况下, $B$相对于$C$下的任一矢量, C若和A相同则可以删去C
   
 - 相关坐标系定义
 
@@ -47,13 +47,12 @@
   \label{旋转矩阵变换分析}
   $$
   
-  
 - 自稳角速度分析
 
   
   - 将底盘陀螺仪的角速度转换到云台Yaw轴电机所在的坐标系$Y$, 保证云台Yaw轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
   
-  - 将底盘陀螺仪的角速度转换到云台Pitch轴电机所在的坐标系$Y$, 保证云台Pitch轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
+  - 将底盘陀螺仪的角速度转换到云台Pitch轴电机所在的坐标系$P$, 保证云台Pitch轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
     $$
     \ {^YC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\alpha} \overrightarrow{e}_z = \overrightarrow{0} \\
       
@@ -64,7 +63,7 @@
   
 - 公式$\eqref{角度补偿}$中
 
-  - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
+  - $^C_O\overrightarrow{\omega}_C$由陀螺仪获取
   - $^YC$是$^CY$的逆矩阵, 或者说转置, $^PC$是$^CP$的逆矩阵, 也是转置, 均可由云台电机编码器读取角度后利用公式$\eqref{旋转矩阵变换分析}$计算即可
   - $\overrightarrow{e}_y$就是单位向量$(0, 1, 0)^T$, $\overrightarrow{e}_z$就是单位向量$(0, 0, 1)^T$
   - 代入具体值, 联立方程即可求解出$\dot{\alpha}, \dot{\beta}$

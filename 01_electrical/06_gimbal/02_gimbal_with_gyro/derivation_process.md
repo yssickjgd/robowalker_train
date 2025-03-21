@@ -43,7 +43,6 @@
   \label{旋转矩阵变换分析}
   $$
   
-  
 - 旋转角速度分析
 
   - 我们已知底盘相对大地的角速度$^C_O\overrightarrow{\omega}_C$, 则根据高中物理推广到一般, 有如下递推公式
@@ -57,14 +56,13 @@
     \label{递推公式}
     $$
 
-    
   - 公式$\eqref{递推公式}$中
-
-    - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
+  
+  - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
     - $^YC$是$^CY$的逆矩阵, 或者说转置, $^PY$是$^YP$的逆矩阵, 也是转置, 均可由云台电机编码器读取角度后利用公式$\eqref{旋转矩阵变换分析}$计算即可
     - $\overrightarrow{e}_y$就是单位向量$(0, 1, 0)^T$, $\overrightarrow{e}_z$就是单位向量$(0, 0, 1)^T$
     - 代入具体值, 联立方程即可求解出$\dot{\alpha}, \dot{\beta}$
-
+  
 - 对于单片机嵌入式系统, 此处可能不太适合大量矩阵进行运算, 因此需要求得最终结果
 
   - 自行求解即可, 锻炼一下计算能力
