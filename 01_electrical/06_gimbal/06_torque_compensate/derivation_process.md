@@ -1,5 +1,3 @@
-
-
 # 云台重力补偿与加速度补偿
 
 ## 1 文中数据的符号与含义
@@ -92,7 +90,7 @@
   \label{最开始的公式}
   $$
   
-- 其中, $m$是云台Pitch轴所固连的负载的质量, $g$是重力加速度, r是云台Pitch轴所固连的负载的重心与坐标系$V$的原点的距离, 也就是图中的蓝色虚线的长度. 而$\beta$在开篇提过, 就是云台Pitch轴电机的角度
+- 其中, $m$是云台Pitch轴所固连的负载的质量, $g$是重力加速度, $r$是云台Pitch轴所固连的负载的重心与坐标系$Y$的原点的距离, 也就是图中的蓝色虚线的长度. 而$\beta$在开篇提过, 就是云台Pitch轴电机的角度
 - 有两种计算重力补偿参数的方法, 后文进行详细讲解
 
 #### 2.1.1 测量法
@@ -168,22 +166,24 @@
         - ${^YC}$, 由云台Yaw电机角度计算得出, 即$Yaw^T(\alpha)$
         - ${^PY}$, 由云台Pitch电机角度计算得出, 即$Pitch^T(\beta + \gamma)$
         - ${^O\overrightarrow{g}}$, 当地重力加速度, 一般默认$(0, 0, -9.8)$
-    - ${^Y\overrightarrow{g}}$, 是坐标系$P$下的重力加速度, 即${^YC} \ {^CO} {^O\overrightarrow{g}}$
-      - 其中
-        - $^CO$, 由底盘陀螺仪获取欧拉角后计算而得
-        - ${^YC}$, 由云台Yaw电机角度计算得出, 即$Yaw^T(\alpha)$
-        - ${^O\overrightarrow{g}}$, 当地重力加速度, 一般默认$(0, 0, -9.8)$
-    - ${^P\overrightarrow{r}_Y}$, 是坐标系$P$下云台Pitch重心指向坐标系$Y$原点的向量, 其形式为$(-?, 0, 0)$
-    - ${^Y_P\overrightarrow{r}_C}$, 是坐标系$Y$下云台Pitch重心指向坐标系$C$原点的向量, 即${^YP} \ {^P\overrightarrow{r}_Y} + \ {^Y\overrightarrow{r}_C}$
-      - ${^Y\overrightarrow{r}_C}$, 是坐标系$Y$下云台Yaw重心指向坐标系$C$原点的向量, 其形式为$(0, 0, -?)$
+  - ${^Y\overrightarrow{g}}$, 是坐标系$P$下的重力加速度, 即${^YC} \ {^CO} {^O\overrightarrow{g}}$
+    - 其中
+      - $^CO$, 由底盘陀螺仪获取欧拉角后计算而得
+      - ${^YC}$, 由云台Yaw电机角度计算得出, 即$Yaw^T(\alpha)$
+      - ${^O\overrightarrow{g}}$, 当地重力加速度, 一般默认$(0, 0, -9.8)$
+  - ${^P\overrightarrow{r}_Y}$, 是坐标系$P$下云台Pitch重心指向坐标系$Y$原点的向量, 其形式为$(-?, 0, 0)$
+  - ${^Y_P\overrightarrow{r}_C}$, 是坐标系$Y$下云台Pitch重心指向坐标系$C$原点的向量, 即${^YP} \ {^P\overrightarrow{r}_Y} + \ {^Y\overrightarrow{r}_C}$
+    - 其中
+        - ${^P\overrightarrow{r}_Y}$, 是坐标系$P$下云台Pitch重心指向坐标系$Y$原点的向量, 其形式为$(-?, 0, 0)$
+        - ${^Y\overrightarrow{r}_C}$, 是坐标系$Y$下云台Yaw重心指向坐标系$C$原点的向量, 其形式为$(0, 0, -?)$
   
-- 最后, 将扭矩投影到电机所在的轴上, 即可得到云台Yaw和Pitch电机所需提供的扭矩
+  - 最后, 将扭矩投影到电机所在的轴上, 即可得到云台Yaw和Pitch电机所需提供的扭矩
+  
   $$
   n_p = {^P\overrightarrow{n}_P^T} \ \overrightarrow{e}_y \\
   
   n_y = {^Y\overrightarrow{n}_P^T} \ \overrightarrow{e}_z
   $$
-  
 
 ## 3 加速度补偿
 
@@ -253,7 +253,7 @@
 
   - 不难发现, $A_\times$是一个反对称矩阵, 即$A_\times + A_\times^T = O$
 
-  - 3阶反对称矩阵有3个自由度, 由这三个变量唯一确定
+    3阶反对称矩阵有3个自由度, 由这三个变量唯一确定
 
   - 当向量叉乘遇到旋转矩阵$R$, 有
     $$
@@ -276,7 +276,7 @@
 
 - 假设这样一个场景, 我们用来推旋转矩阵对时间的导数
 
-  - 一个从坐标系$A$到坐标系$B$的旋转矩阵$^AB$, 简记为$R$, 即Rotation, 
+  - 一个从坐标系$A$到坐标系$B$的旋转矩阵$^AB$, 简记为$R$, 即Rotation
 
   - 坐标系$B$相对$A$有角速度$^A\overrightarrow{\omega}_B$, 简记为$\overrightarrow{\omega}$
 
@@ -431,14 +431,14 @@
 
 - 如若我们知道末端的杆需要多大的力和多大的扭矩, 我们可以依次递归到基座, 也就是底盘上
 
-- **力的递推关系**
+- **力的递归关系**
   $$
   {^{i-1}\overrightarrow{f}_{i-1}} = \ {^{i-1}\overrightarrow{\phi}_{i-1}} 
   
   \ {^{i-1}_iR} \ {^i\overrightarrow{\phi}_i}
   $$
   
-- **扭矩的递推关系**
+- **扭矩的递归关系**
   $$
   {^{i-1}\overrightarrow{n}_{i-1}} = \ {^{i-1}\overrightarrow{\tau}_{i-1}} 
   
@@ -457,17 +457,15 @@
   - Newton公式, 力的作用点在重心上, 则物体受力$\overrightarrow{f}$与物体质量$m$以及物体加速度$\overrightarrow{a}$的关系为
     $$
     \overrightarrow{f} = \frac{d}{dt}(m \overrightarrow v) = m \overrightarrow a
-    \$$
     $$
     
-
-    - Euler公式, 扭矩的作用点在重心上, 则物体受扭矩$\overrightarrow{n}$与物体惯量矩阵$I$, 物体角加速度$\overrightarrow{\alpha}$, 物体角速度$\overrightarrow{\omega}$的关系为
-        $$
-        \overrightarrow n = \frac{d}{dt}(I \overrightarrow \omega) = I \overrightarrow \alpha + \overrightarrow{\omega} \times I \overrightarrow \omega
-        
-        \label{扭矩公式}
-        $$
-        
+  - Euler公式, 扭矩的作用点在重心上, 则物体受扭矩$\overrightarrow{n}$与物体惯量矩阵$I$, 物体角加速度$\overrightarrow{\alpha}$, 物体角速度$\overrightarrow{\omega}$的关系为
+    $$
+      \overrightarrow n = \frac{d}{dt}(I \overrightarrow \omega) = I \overrightarrow \alpha + \overrightarrow{\omega} \times I \overrightarrow \omega
+      
+      \label{扭矩公式}
+      $$
+      
 
 ### 3.2 加速度补偿公式
 
