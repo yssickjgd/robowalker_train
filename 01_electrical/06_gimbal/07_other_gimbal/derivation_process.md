@@ -67,14 +67,13 @@
     \label{递推公式}
     $$
 
-    
   - 公式$\eqref{递推公式}$中
-
+  
     - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
     - $^YC$是$^CY$的逆矩阵, 或者说转置, $^RY$是$^YR$的逆矩阵, 也是转置, $^PR$是$^RP$的逆矩阵, 也是转置, 均可由云台电机编码器读取角度后利用公式$\eqref{旋转矩阵变换分析}$计算即可
     - $\overrightarrow{e}_x$就是单位向量$(1, 0, 0)^T$, $\overrightarrow{e}_y$就是单位向量$(0, 1, 0)^T$, $\overrightarrow{e}_z$就是单位向量$(0, 0, 1)^T$
-    - 代入具体值, 联立方程即可求解出$\dot{\alpha}, \dot{\beta}, \dot{\theta}$
-
+    - 代入具体值, 联立方程即可求解出$\dot{\alpha}, \dot{\theta}, \dot{\beta}$
+  
 - 对于单片机嵌入式系统, 此处可能不太适合大量矩阵进行运算, 因此需要求得最终结果
 
   - 自行求解即可, 锻炼一下计算能力
@@ -85,29 +84,27 @@
 
 - 自稳角速度分析
 
+    - 将底盘陀螺仪的角速度转换到云台Yaw轴电机所在的坐标系$Y$, 保证云台Yaw轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
 
-  - 将底盘陀螺仪的角速度转换到云台Yaw轴电机所在的坐标系$Y$, 保证云台Yaw轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
+    - 将底盘陀螺仪的角速度转换到云台Roll轴电机所在的坐标系$R$, 保证云台Roll轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
 
-  - 将底盘陀螺仪的角速度转换到云台Roll轴电机所在的坐标系$R$, 保证云台Roll轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
-
-  - 将底盘陀螺仪的角速度转换到云台Pitch轴电机所在的坐标系$Y$, 保证云台Pitch轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
-    $$
-    \ {^YC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\alpha} \overrightarrow{e}_z = \overrightarrow{0} \\
+    - 将底盘陀螺仪的角速度转换到云台Pitch轴电机所在的坐标系$Y$, 保证云台Pitch轴始终相对于坐标系$O$朝向不变, 也就是相对于坐标系$O$, 角速度为0
+      $$
+      \ {^YC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\alpha} \overrightarrow{e}_z = \overrightarrow{0} \\
+        
+        \ {^RC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\theta} \overrightarrow{e}_x = \overrightarrow{0} \\
+        
+        \ {^PC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\beta} \overrightarrow{e}_y = \overrightarrow{0} \\
       
-      \ {^RC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\theta} \overrightarrow{e}_x = \overrightarrow{0} \\
+      \label{角度补偿}
+      $$
       
-      \ {^PC} \ {^C_O\overrightarrow{\omega}_C} + \dot{\beta} \overrightarrow{e}_y = \overrightarrow{0} \\
-    
-    \label{角度补偿}
-    $$
+    - 公式$\eqref{角度补偿}$中
 
-    
-- 公式$\eqref{角度补偿}$中
-
-  - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
-  - $^YC$是$^CY$的逆矩阵, 或者说转置, $^RC$是$^CR$的逆矩阵, 或者说转置, $^PC$是$^CP$的逆矩阵, 也是转置, 均可由云台电机编码器读取角度后利用公式$\eqref{旋转矩阵变换分析}$计算即可
-  - $\overrightarrow{e}_x$就是单位向量$(1, 0, 0)^T$, $\overrightarrow{e}_y$就是单位向量$(0, 1, 0)^T$, $\overrightarrow{e}_z$就是单位向量$(0, 0, 1)^T$
-  - 代入具体值, 联立方程即可求解出$\dot{\alpha}, \dot{\beta}$
+      - $^C_O\overrightarrow{\omega}_C$和$^P_O\overrightarrow{\omega}_P$由陀螺仪获取
+      - $^YC$是$^CY$的逆矩阵, 或者说转置, $^RC$是$^CR$的逆矩阵, 或者说转置, $^PC$是$^CP$的逆矩阵, 也是转置, 均可由云台电机编码器读取角度后利用公式$\eqref{旋转矩阵变换分析}$计算即可
+      - $\overrightarrow{e}_x$就是单位向量$(1, 0, 0)^T$, $\overrightarrow{e}_y$就是单位向量$(0, 1, 0)^T$, $\overrightarrow{e}_z$就是单位向量$(0, 0, 1)^T$
+      - 代入具体值, 联立方程即可求解出$\dot{\alpha}, \dot{\theta}, \dot{\beta}$
 
 - 对于单片机嵌入式系统, 此处可能不太适合大量矩阵进行运算, 因此需要求得最终结果
 
