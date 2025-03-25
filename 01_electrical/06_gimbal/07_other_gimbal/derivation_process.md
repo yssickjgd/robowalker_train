@@ -21,7 +21,7 @@
 
   - 以云台Yaw电机左转为正方向, Yaw轴电机角度为$\alpha$, 设角速度为$\dot{\alpha}$
 
-  - ==以云台Roll电机右歪为正方向, Pitch轴电机角度为$\theta$, 设角速度为$\dot{\theta}$==
+  - ==以云台Roll电机右歪为正方向, Roll轴电机角度为$\theta$, 设角速度为$\dot{\theta}$==
 
   - 以云台Pitch电机低头为正方向, Pitch轴电机角度为$\beta$, 设角速度为$\dot{\beta}$
 
