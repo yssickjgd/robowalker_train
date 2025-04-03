@@ -1,0 +1,2 @@
+功率采样板开源链接
+    https://oshwhub.com/trojan/DC24powermeter
