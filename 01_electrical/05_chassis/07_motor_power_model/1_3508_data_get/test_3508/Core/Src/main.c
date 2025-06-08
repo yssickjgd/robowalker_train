@@ -265,7 +265,7 @@ int main(void)
         }
 
         // 串口绘图显示内容
-
+        
         float now_power = powermeter.Get_Power();
         float now_current = motor.Get_Now_Current();
         float now_omega = motor.Get_Now_Omega();
