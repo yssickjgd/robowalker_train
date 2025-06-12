@@ -224,7 +224,7 @@
 
 ## 2. 开源声明
 
-本开源遵循CC BY-NC ( Creative Commons Attribution-NonCommercial ) 开源协议, 仅限于Robomaster参赛队之间队内交流使用，最终解释权为中国科学技术大学RoboWalker战队麻治昊所有
+本开源遵循CC BY-NC ( Creative Commons Attribution-NonCommercial ) 开源协议, 仅限于RoboMaster参赛队之间队内交流使用，最终解释权为中国科学技术大学RoboWalker战队麻治昊所有
 
 ## 3 致谢与参考
 
