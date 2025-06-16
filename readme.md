@@ -22,9 +22,9 @@
 >
 >   https://github.com/yssickjgd/robowalker_train
 >
->   配套PPT资料 ( 有同学可能反馈说网盘中的PPT无法下载，实际上是可以下载的。在PPT预览界面右上角有打印为本地PDF文档，在其中即可直接下载 ) 
+>   配套PPT资料 ( 由于中国科大Rec网盘于20251201停止维护 因此该项目于202306161600转移至中国科大新网盘科大云盘平台中. 原Rec网盘链接将失效 )  
 >
->   https://rec.ustc.edu.cn/share/c8b3bbc0-32bc-11ee-98d2-2330cf7972b8
+>   https://pan.ustc.edu.cn/share/index/e7cdb46b48f44cdd8bff
 
 ### 1.2 教程目录
 
