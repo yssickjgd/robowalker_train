@@ -103,13 +103,13 @@
         7.  ==无裁判系统的热量检测算法==
         8.  ==总结与致谢==
     8.  裁判系统 ( referee )
-        1.  官方软件的获取与使用
-        2.  比赛通用规则解读
-        3.  裁判系统硬件介绍
-        4.  裁判系统软件介绍
-        5.  计算机网络相关知识
-        6.  裁判系统服务器搭建
-        7.  裁判系统用户协议
+        1.  裁判系统简介
+        2.  裁判系统环境搭建
+        3.  裁判系统用户协议解析
+        4.  通信粘包处理
+        5.  双缓冲UART通信
+        6.  番外篇 CRC校验精讲
+        7.  番外篇 计算机网络常识梳理
     9.  观测与滤波 ( filter )
         1.  概率论基础
         2.  矩阵分析基础
@@ -117,8 +117,8 @@
         4.  Kalman滤波器优化电机反馈速度
         5.  卷积与系统论基础
         6.  频率的形象化理解
-        7.  频率滤波器
-        8.  频率滤波器优化陀螺仪角速度
+        7.  频选滤波器
+        8.  频选滤波器优化陀螺仪角速度
         9.  Kalman滤波器与频率滤波器的对比
         10.  番外篇 锁相环
     10.  陀螺仪 ( gyroscope )
@@ -244,6 +244,14 @@
   - https://gitee.com/hnuyuelurm/basic_framework
 - **青岛大学 XRobot战队** 电控开源架构
   - https://github.com/xrobot-org/XRobot
+- **哈尔滨工程大学 创梦之翼战队** 遥控接收系统使用与维护手册
+- ﻿**北部湾大学 飞虎战队** DT7的简易修理和校准
+- **哈工大威海 HERO战队 李赫同学** 机器人学相关的坐标系旋转内容
+  - https://zhuanlan.zhihu.com/p/13950686102
+- **西交利物浦大学 GMaster战队** 电机功率模型
+  - https://github.com/MaxwellDemonLin/Motor-modeling-and-power-control
+- **香港科技大学 ENTERPRIZE战队** 功率控制算法
+  - https://github.com/hkustenterprize/RM2024-PowerModule 
 
 ## 加油!
 
