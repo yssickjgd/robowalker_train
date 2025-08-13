@@ -229,7 +229,7 @@ void Class_PID::TIM_Adjust_PeriodElapsedCallback()
 
     //计算i项
 
-    if (I_Variable_Speed_A == 0.0f && I_Variable_Speed_A == 0.0f)
+    if (I_Variable_Speed_A == 0.0f && I_Variable_Speed_B == 0.0f)
     {
         //非变速积分
         speed_ratio = 1.0f;
@@ -237,16 +237,19 @@ void Class_PID::TIM_Adjust_PeriodElapsedCallback()
     else
     {
         //变速积分
-        if (abs_error <= I_Variable_Speed_B)
+        if (abs_error <= I_Variable_Speed_A)
         {
+            //误差小于A，正常积分
             speed_ratio = 1.0f;
         }
-        else if (I_Variable_Speed_B < abs_error && abs_error < I_Variable_Speed_A + I_Variable_Speed_B)
+        else if (abs_error < I_Variable_Speed_A + I_Variable_Speed_B)
         {
-            speed_ratio = (I_Variable_Speed_A + I_Variable_Speed_B - abs_error) / I_Variable_Speed_A;
+            //误差在A到A+B之间，线性递减
+            speed_ratio = 1.0f - (abs_error - I_Variable_Speed_A) / I_Variable_Speed_B;        
         }
-        if (abs_error >= I_Variable_Speed_B)
+        else
         {
+            //误差大于A+B，停止积分
             speed_ratio = 0.0f;
         }
     }
@@ -310,3 +313,4 @@ void Class_PID::TIM_Adjust_PeriodElapsedCallback()
 }
 
 /************************ COPYRIGHT(C) USTC-ROBOWALKER **************************/
+
