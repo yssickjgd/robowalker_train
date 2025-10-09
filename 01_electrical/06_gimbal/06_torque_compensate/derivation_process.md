@@ -464,8 +464,8 @@
       \overrightarrow n = \frac{d}{dt}(I \overrightarrow \omega) = I \overrightarrow \alpha + \overrightarrow{\omega} \times I \overrightarrow \omega
       
       \label{扭矩公式}
-      $$
-      
+    $$
+    
 
 ### 3.2 加速度补偿公式
 
