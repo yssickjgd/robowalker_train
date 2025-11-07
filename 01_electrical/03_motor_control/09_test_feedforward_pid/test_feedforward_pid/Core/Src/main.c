@@ -169,10 +169,10 @@ int main(void)
     CAN_Init(&hcan1, CAN_Motor_Call_Back);
     UART_Init(&huart2, UART_Serialplot_Call_Back, SERIALPLOT_RX_VARIABLE_ASSIGNMENT_MAX_LENGTH);
 
-    serialplot.Init(&huart2, 6, (char **)Variable_Assignment_List);
+    serialplot.Init(&huart2, 4, (char **)Variable_Assignment_List);
 
     motor.PID_Omega.Init(0.0f, 0.0f, 0.0f, 0.0f, 2500.0f, 2500.0f);
-    //修改为默认减速比�?
+    //修改为默认减速比�?
     motor.Init(&hcan1, CAN_Motor_ID_0x201, Control_Method_OMEGA);
 
   /* USER CODE END 2 */
@@ -192,7 +192,7 @@ int main(void)
         serialplot.Set_Data(2, &Target_Omega, &Now_Omega);
         serialplot.TIM_Write_PeriodElapsedCallback();
 
-        //输出数据到电�?
+        //输出数据到电�?
         motor.TIM_PID_PeriodElapsedCallback();
 
         //通信设备回调数据
