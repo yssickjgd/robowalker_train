@@ -33,7 +33,7 @@
  * @brief UART通信接收回调函数数据类型
  *
  */
-typedef void (*UART_Call_Back)(uint8_t *Buffer, uint16_t Length);
+typedef void (*UART_Callback)(uint8_t *Buffer, uint16_t Length);
 
 /**
  * @brief UART通信处理结构体
@@ -41,7 +41,7 @@ typedef void (*UART_Call_Back)(uint8_t *Buffer, uint16_t Length);
 struct Struct_UART_Manage_Object
 {
     UART_HandleTypeDef *UART_Handler;
-    UART_Call_Back Callback_Function;
+    UART_Callback Callback_Function;
 
     // 双缓冲适配的缓冲区以及当前激活的缓冲区
     uint8_t Rx_Buffer_0[UART_BUFFER_SIZE];
@@ -72,11 +72,11 @@ extern struct Struct_UART_Manage_Object UART10_Manage_Object;
 
 /* Exported function declarations --------------------------------------------*/
 
-void UART_Init(UART_HandleTypeDef *huart, UART_Call_Back Callback_Function);
+void UART_Init(UART_HandleTypeDef *huart, UART_Callback Callback_Function);
 
-void UART_Reinit(UART_HandleTypeDef *huart);
+void UART_Reinit(UART_HandleTypeDef * huart);
 
-uint8_t UART_Send_Data(UART_HandleTypeDef *huart, uint8_t *Data, uint16_t Length);
+uint8_t UART_Transmit_Data(UART_HandleTypeDef *huart, uint8_t *Data, uint16_t Length);
 
 #endif
 
