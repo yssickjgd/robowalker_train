@@ -112,8 +112,8 @@
         7.  ==番外篇 计算机网络常识梳理-下篇==
         8.  ==番外篇 校验算法与CRC校验==
     9.  ==结语 ( conclusion )==
-            1.  ==电控结语==
-    
+        1. ==电控结语==
+
 2.  电控进阶 ( electrical_plus )
    1. 开篇 ( electrical_plus_introduction )
       1. 电控进阶导论
