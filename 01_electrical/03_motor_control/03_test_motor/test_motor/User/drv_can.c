@@ -62,56 +62,59 @@ void CAN_Init(CAN_HandleTypeDef *hcan, CAN_Call_Back Callback_Function)
 }
 
 /**
- * @brief 配置CAN的过滤器
+ * @brief 配置CAN的滤波器
  *
  * @param hcan CAN编号
- * @param Object_Para 编号 | FIFOx | ID类型 | 帧类型
+ * @param Object_Para 编号[3:] | FIFOx[2:2] | ID类型[1:1] | 帧类型[0:0]
  * @param ID ID
- * @param Mask_ID 屏蔽位(0x3ff, 0x1fffffff)
+ * @param Mask_ID 屏蔽位(0x7ff, 0x1fffffff)
  */
 void CAN_Filter_Mask_Config(CAN_HandleTypeDef *hcan, uint8_t Object_Para, uint32_t ID, uint32_t Mask_ID)
 {
     CAN_FilterTypeDef can_filter_init_structure;
 
-    //检测传参是否正确
-    assert_param(hcan != NULL);
+    // 看第0位ID, 判断是数据帧还是遥控帧
+    // 遥控帧暂不处理
+    if (Object_Para & 0x01)
+    {
+        return;
+    }
 
-    if ((Object_Para & 0x02))
+    // 看第1位ID, 判断是标准帧还是扩展帧
+    // 扩展帧暂不处理
+    if ((Object_Para & 0x02) >> 1)
     {
-        //数据帧
-        //掩码后ID的高16bit
-        can_filter_init_structure.FilterIdHigh = ID << 3 << 16;
-        //掩码后ID的低16bit
-        can_filter_init_structure.FilterIdLow = ID << 3 | ((Object_Para & 0x03) << 1);
-        // ID掩码值高16bit
-        can_filter_init_structure.FilterMaskIdHigh = Mask_ID << 3 << 16;
-        // ID掩码值低16bit
-        can_filter_init_structure.FilterMaskIdLow = Mask_ID << 3 | ((Object_Para & 0x03) << 1);
+        return;
     }
-    else
-    {
-        //其他帧
-        //掩码后ID的高16bit
-        can_filter_init_structure.FilterIdHigh = ID << 5;
-        //掩码后ID的低16bit
-        can_filter_init_structure.FilterIdLow = ((Object_Para & 0x03) << 1);
-        // ID掩码值高16bit
-        can_filter_init_structure.FilterMaskIdHigh = Mask_ID << 5;
-        // ID掩码值低16bit
-        can_filter_init_structure.FilterMaskIdLow = ((Object_Para & 0x03) << 1);
-    }
-    //滤波器序号, 0-27, 共28个滤波器, 前14个在CAN1, 后14个在CAN2
-    can_filter_init_structure.FilterBank = Object_Para >> 3;
-    //滤波器绑定FIFO0
-    can_filter_init_structure.FilterFIFOAssignment = (Object_Para >> 2) & 0x01;
-    //使能滤波器
-    can_filter_init_structure.FilterActivation = ENABLE;
-    //滤波器模式，设置ID掩码模式
+
+    // 标准帧
+
+    // ID配置, 标准帧的ID是11bit, 按规定放在高16bit中的[15:5]位
+    // 掩码后ID的高16bit
+    can_filter_init_structure.FilterIdHigh = (ID & 0x7FF) << 5;
+    // 掩码后ID的低16bit
+    can_filter_init_structure.FilterIdLow = 0x0000;
+    // 掩码后屏蔽位的高16bit
+    can_filter_init_structure.FilterMaskIdHigh = (Mask_ID & 0x7FF) << 5;
+    // 掩码后屏蔽位的低16bit
+    can_filter_init_structure.FilterMaskIdLow = 0x0000;
+
+    // 滤波器配置
+    // 滤波器序号, 0-27, 共28个滤波器, can1是0~13, can2是14~27
+    can_filter_init_structure.FilterBank = (Object_Para >> 3) & 0x1F;
+    // 滤波器模式, 设置ID掩码模式
     can_filter_init_structure.FilterMode = CAN_FILTERMODE_IDMASK;
     // 32位滤波
     can_filter_init_structure.FilterScale = CAN_FILTERSCALE_32BIT;
-    //从机模式选择开始单元
+    // 使能滤波器
+    can_filter_init_structure.FilterActivation = ENABLE;
+
+    // 从机模式配置
+    // 从机模式选择开始单元, 一般均分14个单元给CAN1和CAN2
     can_filter_init_structure.SlaveStartFilterBank = 14;
+
+    // 滤波器绑定FIFOx, 只能绑定一个
+    can_filter_init_structure.FilterFIFOAssignment = (Object_Para >> 2) & 0x01;
 
     HAL_CAN_ConfigFilter(hcan, &can_filter_init_structure);
 }
