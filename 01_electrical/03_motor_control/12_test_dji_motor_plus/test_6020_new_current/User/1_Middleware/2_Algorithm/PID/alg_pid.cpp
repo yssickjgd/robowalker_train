@@ -161,7 +161,7 @@ void Class_PID::TIM_Calculate_PeriodElapsedCallback()
     else
     {
         // 微分先行使能
-        d_out = K_D * (p_out + i_out - Pre_Out) / D_T;
+        d_out = -K_D * (Now - Pre_Now) / D_T;
     }
 
     // 计算前馈
