@@ -1,3 +1,7 @@
+# USB官方文档链接
+
+https://www.usb.org/documents
+
 # USB1.0低速设备
 
 ```mermaid
