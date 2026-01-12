@@ -1,3 +1,7 @@
+达妙BSP (该仓库内相关库为最新版，请以该版为准！)
+    开发环境：CLion
+    https://github.com/yssickjgd/damiao_mc02_bsp
+    
 24赛季舵轮步兵
     开发环境：CLion
     https://git.lug.ustc.edu.cn/yssickjgd/robowalker2024bottominfantry

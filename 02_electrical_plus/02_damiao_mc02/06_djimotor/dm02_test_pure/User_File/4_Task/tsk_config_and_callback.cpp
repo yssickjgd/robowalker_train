@@ -33,6 +33,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+// 大疆电机
+Class_Motor_DJI_GM6020 motor_6020;
+Class_Motor_DJI_C620 motor_3508;
+
 // 全局初始化完成标志位
 bool init_finished = false;
 
@@ -41,14 +45,31 @@ bool init_finished = false;
 /* Function prototypes -------------------------------------------------------*/
 
 /**
- * @brief USB虚拟串口接收回调函数
+ * @brief CAN接收回调函数
  *
- * @param Buffer 接收缓冲区
- * @param Length 接收数据长度
+ * @param Header 接收报文头
+ * @param Buffer 接收数据缓冲区
  */
-void Serial_USB_Call_Back(uint8_t *Buffer, uint16_t Length)
+void Can_Callback_Function(FDCAN_RxHeaderTypeDef &Header, uint8_t *Buffer)
 {
+    // DJI电机专属
 
+    // 根据ID分配数据
+    switch (Header.Identifier)
+    {
+    case (0x201):
+    {
+        motor_3508.CAN_RxCpltCallback();
+
+        break;
+    }
+    case (0x205):
+    {
+        motor_6020.CAN_RxCpltCallback();
+
+        break;
+    }
+    }
 }
 
 /**
@@ -66,7 +87,6 @@ void Task3600s_Callback()
  */
 void Task1s_Callback()
 {
-
 }
 
 /**
@@ -75,6 +95,34 @@ void Task1s_Callback()
  */
 void Task1ms_Callback()
 {
+    static int mod100 = 0;
+    mod100++;
+    if (mod100 == 100)
+    {
+        mod100 = 0;
+
+        motor_3508.TIM_100ms_Alive_PeriodElapsedCallback();
+        motor_6020.TIM_100ms_Alive_PeriodElapsedCallback();
+    }
+
+    static uint32_t Counter;
+    Counter++;
+    motor_3508.Set_Target_Omega(5.0f * motor_6020.Get_Now_Angle());
+    motor_6020.Set_Target_Angle(0.0f);
+    motor_3508.TIM_Calculate_PeriodElapsedCallback();
+    motor_6020.TIM_Calculate_PeriodElapsedCallback();
+    TIM_1ms_CAN_PeriodElapsedCallback();
+
+    // Vofa+显示内容
+    float target_omega_3508 = motor_3508.Get_Target_Omega();
+    float now_omega_3508 = motor_3508.Get_Now_Omega();
+    float target_angle_6020 = motor_6020.Get_Target_Angle();
+    float now_angle_6020 = motor_6020.Get_Now_Angle();
+    float target_omega_6020 = motor_6020.Get_Target_Omega();
+    float now_omega_6020 = motor_6020.Get_Now_Omega();
+    Vofa_USB.Set_Data(6, &target_omega_3508, &now_omega_3508, &target_angle_6020, &now_angle_6020, &target_omega_6020, &now_omega_6020);
+    Vofa_USB.TIM_1ms_Write_PeriodElapsedCallback();
+
     TIM_1ms_IWDG_PeriodElapsedCallback();
 }
 
@@ -84,7 +132,6 @@ void Task1ms_Callback()
  */
 void Task125us_Callback()
 {
-
 }
 
 /**
@@ -93,7 +140,6 @@ void Task125us_Callback()
  */
 void Task10us_Callback()
 {
-
 }
 
 /**
@@ -103,6 +149,21 @@ void Task10us_Callback()
 void Task_Init()
 {
     SYS_Timestamp.Init(&htim5);
+    // 串口绘图的USB
+    USB_Init(nullptr);
+    // 大疆电机的CAN
+    CAN_Init(&hfdcan1, Can_Callback_Function);
+
+    // Vofa初始化
+    Vofa_USB.Init();
+
+    // 大疆电机
+    motor_6020.Init(&hfdcan1, Motor_DJI_ID_0x205, Motor_DJI_Control_Method_ANGLE);
+    motor_3508.PID_Omega.Init(0.4f, 1.0f, 0.0f, 0.0f, 2.0f, 2.0f);
+    motor_3508.Init(&hfdcan1, Motor_DJI_ID_0x201, Motor_DJI_Control_Method_OMEGA);
+    motor_6020.PID_Omega.Init(0.04f, 0.16f, 0.0f, 0.0f, 0.1f, 0.1f);
+    motor_6020.PID_Angle.Init(12.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    motor_6020.Init(&hfdcan1, Motor_DJI_ID_0x205, Motor_DJI_Control_Method_ANGLE);
 
     // 定时器中断初始化
     HAL_TIM_Base_Start_IT(&htim4);
@@ -121,7 +182,6 @@ void Task_Init()
  */
 void Task_Loop()
 {
-
 }
 
 /**

@@ -175,6 +175,7 @@ void TIM_1ms_CAN_PeriodElapsedCallback()
     }
 
     CAN_Transmit_Data(&hfdcan1, 0x1fe, CAN1_0x1fe_Tx_Data, 8);
+    CAN_Transmit_Data(&hfdcan1, 0x200, CAN1_0x200_Tx_Data, 8);
 }
 
 /**
@@ -259,7 +260,12 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
  */
 void HAL_FDCAN_ErrorStatusCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t ErrorStatusITs)
 {
-
+    if ((ErrorStatusITs & FDCAN_IT_BUS_OFF) != RESET)
+    {
+        // CAN总线离线, 重新启动CAN
+        HAL_FDCAN_Stop(hfdcan);
+        HAL_FDCAN_Start(hfdcan);
+    }
 }
 
 /************************ COPYRIGHT(C) USTC-ROBOWALKER **************************/
