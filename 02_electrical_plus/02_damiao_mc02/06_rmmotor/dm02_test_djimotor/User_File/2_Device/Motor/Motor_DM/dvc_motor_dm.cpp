@@ -222,6 +222,7 @@ uint8_t *allocate_tx_data(const FDCAN_HandleTypeDef *hcan, const Enum_Motor_DM_M
  * @param __Angle_Max 最大位置, 与上位机控制幅值PMAX保持一致, 传统模式有效
  * @param __Omega_Max 最大速度, 与上位机控制幅值VMAX保持一致, 传统模式有效
  * @param __Torque_Max 最大扭矩, 与上位机控制幅值TMAX保持一致, 传统模式有效
+ * @param __Current_Max 最大电流, 与上位机串口中上电打印电流保持一致, EMIT模式需要
  */
 void Class_Motor_DM_Normal::Init(const FDCAN_HandleTypeDef *hcan, const uint8_t &__CAN_Rx_ID, const uint8_t &__CAN_Tx_ID, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method, const float &__Angle_Max, const float &__Omega_Max, const float &__Torque_Max, const float &__Current_Max)
 {
@@ -284,7 +285,7 @@ void Class_Motor_DM_Normal::CAN_RxCpltCallback()
  * @brief 发送清除错误信息
  *
  */
-void Class_Motor_DM_Normal::CAN_Send_Clear_Error()
+void Class_Motor_DM_Normal::CAN_Send_Clear_Error() const
 {
     CAN_Transmit_Data(CAN_Manage_Object->CAN_Handler, CAN_Tx_ID, DM_Motor_CAN_Message_Clear_Error, 8);
 }
@@ -293,7 +294,7 @@ void Class_Motor_DM_Normal::CAN_Send_Clear_Error()
  * @brief 发送使能电机
  *
  */
-void Class_Motor_DM_Normal::CAN_Send_Enter()
+void Class_Motor_DM_Normal::CAN_Send_Enter() const
 {
     CAN_Transmit_Data(CAN_Manage_Object->CAN_Handler, CAN_Tx_ID, DM_Motor_CAN_Message_Enter, 8);
 }
@@ -302,7 +303,7 @@ void Class_Motor_DM_Normal::CAN_Send_Enter()
  * @brief 发送失能电机
  *
  */
-void Class_Motor_DM_Normal::CAN_Send_Exit()
+void Class_Motor_DM_Normal::CAN_Send_Exit() const
 {
     CAN_Transmit_Data(CAN_Manage_Object->CAN_Handler, CAN_Tx_ID, DM_Motor_CAN_Message_Exit, 8);
 }
@@ -311,7 +312,7 @@ void Class_Motor_DM_Normal::CAN_Send_Exit()
  * @brief 发送保存当前位置为零点
  *
  */
-void Class_Motor_DM_Normal::CAN_Send_Save_Zero()
+void Class_Motor_DM_Normal::CAN_Send_Save_Zero() const
 {
     CAN_Transmit_Data(CAN_Manage_Object->CAN_Handler, CAN_Tx_ID, DM_Motor_CAN_Message_Save_Zero, 8);
 }
@@ -320,7 +321,7 @@ void Class_Motor_DM_Normal::CAN_Send_Save_Zero()
  * @brief TIM定时器中断定期检测电机是否存活, 检测周期取决于电机掉线时长
  *
  */
-void Class_Motor_DM_Normal::TIM_Alive_PeriodElapsedCallback()
+void Class_Motor_DM_Normal::TIM_100ms_Alive_PeriodElapsedCallback()
 {
     // 判断该时间段内是否接收过电机数据
     if (Flag == Pre_Flag)
@@ -360,15 +361,19 @@ void Class_Motor_DM_Normal::TIM_Send_PeriodElapsedCallback()
 
         Output();
     }
-    else if (Rx_Data.Control_Status == Motor_DM_Control_Status_DISABLE)
-    {
-        // 电机可能掉线, 使能电机
-        CAN_Send_Enter();
-    }
     else
     {
-        // 电机错误, 发送清除错误帧
-        CAN_Send_Clear_Error();
+        if (Rx_Data.Control_Status == Motor_DM_Control_Status_DISABLE)
+        {
+            // 电机可能掉线, 使能电机
+            CAN_Send_Enter();
+        }
+        else
+        {
+            // 电机错误, 发送清除错误帧, 使能电机
+            CAN_Send_Clear_Error();
+            CAN_Send_Enter();
+        }
     }
 }
 
@@ -379,7 +384,6 @@ void Class_Motor_DM_Normal::TIM_Send_PeriodElapsedCallback()
 void Class_Motor_DM_Normal::Data_Process()
 {
     // 数据处理过程
-    int32_t delta_encoder;
     uint16_t tmp_encoder, tmp_omega, tmp_torque;
     Struct_Motor_DM_CAN_Rx_Data_Normal *tmp_buffer = (Struct_Motor_DM_CAN_Rx_Data_Normal *) CAN_Manage_Object->Rx_Buffer;
 
@@ -396,29 +400,12 @@ void Class_Motor_DM_Normal::Data_Process()
 
     Rx_Data.Control_Status = static_cast<Enum_Motor_DM_Control_Status_Normal>(tmp_buffer->Control_Status_Enum);
 
-    // 计算圈数与总角度值
-    delta_encoder = tmp_encoder - Rx_Data.Pre_Encoder;
-    if (delta_encoder < -(1 << 15))
-    {
-        // 正方向转过了一圈
-        Rx_Data.Total_Round++;
-    }
-    else if (delta_encoder > (1 << 15))
-    {
-        // 反方向转过了一圈
-        Rx_Data.Total_Round--;
-    }
-    Rx_Data.Total_Encoder = Rx_Data.Total_Round * (1 << 16) + tmp_encoder - ((1 << 15) - 1);
-
     // 计算电机本身信息
-    Rx_Data.Now_Angle = (float) (Rx_Data.Total_Encoder) / (float) ((1 << 16) - 1) * Angle_Max * 2.0f;
+    Rx_Data.Now_Angle = Basic_Math_Int_To_Float(tmp_encoder, 0x7fff, (1 << 16) - 1, 0, Angle_Max);
     Rx_Data.Now_Omega = Basic_Math_Int_To_Float(tmp_omega, 0x7ff, (1 << 12) - 1, 0, Omega_Max);
     Rx_Data.Now_Torque = Basic_Math_Int_To_Float(tmp_torque, 0x7ff, (1 << 12) - 1, 0, Torque_Max);
     Rx_Data.Now_MOS_Temperature = tmp_buffer->MOS_Temperature + BASIC_MATH_CELSIUS_TO_KELVIN;
     Rx_Data.Now_Rotor_Temperature = tmp_buffer->Rotor_Temperature + BASIC_MATH_CELSIUS_TO_KELVIN;
-
-    // 存储预备信息
-    Rx_Data.Pre_Encoder = tmp_encoder;
 }
 
 /**
@@ -497,9 +484,10 @@ void Class_Motor_DM_Normal::Output()
  * @param __CAN_Rx_ID 绑定的CAN ID
  * @param __Motor_DM_Control_Method 电机控制方式, 默认角度
  * @param __Encoder_Offset 编码器偏移, 默认0
- * @param __Current_Max 最大电流
+ * @param __Nearest_Angle 就近转位的单次最大旋转角度, 其数值一般为圆周的整数倍或纯小数倍, 且纯小数倍时可均分圆周, 0表示不启用就近转位
+ * @param __Gearbox_Rate 减速比, 默认10.0f
  */
-void Class_Motor_DM_1_To_4::Init(const FDCAN_HandleTypeDef *hcan, const Enum_Motor_DM_Motor_ID_1_To_4 &__CAN_Rx_ID, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method, const int32_t &__Encoder_Offset, const float &__Current_Max)
+void Class_Motor_DM_1_To_4::Init(const FDCAN_HandleTypeDef *hcan, const Enum_Motor_DM_Motor_ID_1_To_4 &__CAN_Rx_ID, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method, const int32_t &__Encoder_Offset, const float &__Nearest_Angle, const float &__Gearbox_Rate)
 {
     if (hcan->Instance == FDCAN1)
     {
@@ -516,7 +504,8 @@ void Class_Motor_DM_1_To_4::Init(const FDCAN_HandleTypeDef *hcan, const Enum_Mot
     CAN_Rx_ID = __CAN_Rx_ID;
     Motor_DM_Control_Method = __Motor_DM_Control_Method;
     Encoder_Offset = __Encoder_Offset;
-    Current_Max = __Current_Max;
+    Nearest_Angle = __Nearest_Angle;
+    Gearbox_Rate = __Gearbox_Rate;
     Tx_Data = allocate_tx_data(hcan, __CAN_Rx_ID);
 }
 
@@ -558,17 +547,16 @@ void Class_Motor_DM_1_To_4::TIM_100ms_Alive_PeriodElapsedCallback()
  * @brief TIM定时器中断计算回调函数, 计算周期取决于电机反馈周期
  *
  */
-void Class_Motor_DM_1_To_4::TIM_1ms_Calculate_PeriodElapsedCallback()
+void Class_Motor_DM_1_To_4::TIM_Calculate_PeriodElapsedCallback()
 {
     PID_Calculate();
 
-    float tmp_value = Target_Current + Feedforward_Current;
-    Basic_Math_Constrain(&tmp_value, -Current_Max, Current_Max);
-    Out = tmp_value * Current_To_Out;
+    Out = (Target_Torque + Feedforward_Torque) / CURRENT_TO_TORQUE / Gearbox_Rate * CURRENT_TO_OUT;
+    Basic_Math_Constrain(&Out, -OUT_MAX, OUT_MAX);
 
     Output();
 
-    Feedforward_Current = 0.0f;
+    Feedforward_Torque = 0.0f;
     Feedforward_Omega = 0.0f;
 }
 
@@ -591,22 +579,22 @@ void Class_Motor_DM_1_To_4::Data_Process()
 
     // 计算圈数与总编码器值
     delta_encoder = tmp_encoder - Rx_Data.Pre_Encoder;
-    if (delta_encoder < -Encoder_Num_Per_Round / 2)
+    if (delta_encoder < -ENCODER_NUM_PER_ROUND / 2)
     {
         // 正方向转过了一圈
         Rx_Data.Total_Round++;
     }
-    else if (delta_encoder > Encoder_Num_Per_Round / 2)
+    else if (delta_encoder > ENCODER_NUM_PER_ROUND / 2)
     {
         // 反方向转过了一圈
         Rx_Data.Total_Round--;
     }
-    Rx_Data.Total_Encoder = Rx_Data.Total_Round * Encoder_Num_Per_Round + tmp_encoder + Encoder_Offset;
+    Rx_Data.Total_Encoder = Rx_Data.Total_Round * ENCODER_NUM_PER_ROUND + tmp_encoder + Encoder_Offset;
 
     // 计算电机本身信息
-    Rx_Data.Now_Angle = (float) Rx_Data.Total_Encoder / (float) Encoder_Num_Per_Round * 2.0f * PI;
+    Rx_Data.Now_Angle = (float) Rx_Data.Total_Encoder / (float) ENCODER_NUM_PER_ROUND * 2.0f * PI;
     Rx_Data.Now_Omega = tmp_omega / 100.0f * BASIC_MATH_RPM_TO_RADPS;
-    Rx_Data.Now_Current = tmp_current / 1000.0f;
+    Rx_Data.Now_Torque = tmp_current / 1000.0f * CURRENT_TO_TORQUE * Gearbox_Rate;
     Rx_Data.Now_MOS_Temperature = tmp_buffer->MOS_Temperature + BASIC_MATH_CELSIUS_TO_KELVIN;
     Rx_Data.Now_Rotor_Temperature = tmp_buffer->Rotor_Temperature + BASIC_MATH_CELSIUS_TO_KELVIN;
 
@@ -632,7 +620,7 @@ void Class_Motor_DM_1_To_4::PID_Calculate()
         PID_Omega.Set_Now(Rx_Data.Now_Omega);
         PID_Omega.TIM_Calculate_PeriodElapsedCallback();
 
-        Target_Current = PID_Omega.Get_Out();
+        Target_Torque = PID_Omega.Get_Out();
 
         break;
     }
@@ -648,13 +636,7 @@ void Class_Motor_DM_1_To_4::PID_Calculate()
         PID_Omega.Set_Now(Rx_Data.Now_Omega);
         PID_Omega.TIM_Calculate_PeriodElapsedCallback();
 
-        Target_Current = PID_Omega.Get_Out();
-
-        break;
-    }
-    default:
-    {
-        Target_Current = 0.0f;
+        Target_Torque = PID_Omega.Get_Out();
 
         break;
     }

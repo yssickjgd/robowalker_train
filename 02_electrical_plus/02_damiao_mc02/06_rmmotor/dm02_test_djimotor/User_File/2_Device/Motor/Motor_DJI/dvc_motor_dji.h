@@ -186,10 +186,10 @@ protected:
     // 常量
 
     // 功率计算系数
-    const float POWER_K_0 = 0.8130f;
-    const float POWER_K_1 = -0.0005f;
-    const float POWER_K_2 = 6.0021f;
-    const float POWER_A = 1.3715f;
+    const float POWER_K_0 = 0.5807780373237382f;
+    const float POWER_K_1 = 0.000495794444214091f;
+    const float POWER_K_2 = 27.17379907809995f;
+    const float POWER_A = 0.9334894382537696f;
 
     // 一圈编码器刻度
     const uint16_t ENCODER_NUM_PER_ROUND = 8192;
@@ -434,10 +434,10 @@ protected:
     // 常量
 
     // 功率计算系数
-    const float POWER_K_0 = 0.0171687401695532f;
-    const float POWER_K_1 = 0.00004319062337601348f;
-    const float POWER_K_2 = 0.12785662198126574f;
-    const float POWER_A = 1.598658371452403f;
+    const float POWER_K_0 = 1.1532294690949845f;
+    const float POWER_K_1 = 0.00003165414968530437f;
+    const float POWER_K_2 = 683.7802569066574f;
+    const float POWER_A = 0.8267041157447231f;
 
     // 一圈编码器刻度
     const uint16_t ENCODER_NUM_PER_ROUND = 8192;

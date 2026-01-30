@@ -53,10 +53,10 @@ enum Enum_Serialplot_Data_Type
 };
 
 /**
- * @brief Specialized, 串口绘图工具, 最多支持25个通道
+ * @brief Reusable, 串口绘图工具, 最多支持25个通道
  *
  */
-class Class_Serialplot
+class Class_Serialplot_UART
 {
 public:
     void Init(const UART_HandleTypeDef *huart, const Enum_Serialplot_Checksum_8 &__Checksum_8 = Serialplot_Checksum_8_ENABLE, const uint8_t &__Rx_Variable_Assignment_Num = 0, const char **__Rx_Variable_Assignment_List = NULL, const Enum_Serialplot_Data_Type &__Data_Type = Serialplot_Data_Type_FLOAT, const uint8_t &__Frame_Header = 0xab);
@@ -121,7 +121,7 @@ protected:
 };
 
 /**
- * @brief Specialized, 串口绘图工具, 最多支持25个通道
+ * @brief Reusable, 串口绘图工具, 最多支持25个通道
  *
  */
 class Class_Serialplot_USB
@@ -190,9 +190,6 @@ protected:
 
 /* Exported variables --------------------------------------------------------*/
 
-extern Class_Serialplot Serialplot;
-extern Class_Serialplot_USB Serialplot_USB;
-
 /* Exported function declarations --------------------------------------------*/
 
 /**
@@ -200,7 +197,7 @@ extern Class_Serialplot_USB Serialplot_USB;
  *
  * @return int32_t 当前接收的指令在指令字典中的编号
  */
-inline int32_t Class_Serialplot::Get_Variable_Index() const
+inline int32_t Class_Serialplot_UART::Get_Variable_Index() const
 {
     return (Variable_Index);
 }
@@ -210,7 +207,7 @@ inline int32_t Class_Serialplot::Get_Variable_Index() const
  *
  * @return float 当前接收的指令在指令字典中的值
  */
-inline float Class_Serialplot::Get_Variable_Value() const
+inline float Class_Serialplot_UART::Get_Variable_Value() const
 {
     return (Variable_Value);
 }
@@ -221,7 +218,7 @@ inline float Class_Serialplot::Get_Variable_Value() const
  * @param Number 添加的数据数量
  * @param ... 每个数据的指针
  */
-inline void Class_Serialplot::Set_Data(const int &Number, ...)
+inline void Class_Serialplot_UART::Set_Data(const int &Number, ...)
 {
     va_list data_ptr;
     va_start(data_ptr, Number);

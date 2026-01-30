@@ -405,8 +405,8 @@ uint8_t *allocate_tx_data(const FDCAN_HandleTypeDef *hcan, const Enum_Motor_DJI_
  * @param K_1 电机建模系数
  * @param K_2 电机建模系数
  * @param A 电机建模系数
- * @param Current 电流
- * @param Omega 角速度
+ * @param Torque 减速箱前扭矩, Nm
+ * @param Omega 减速箱前角速度, rad/s
  * @return
  */
 float power_calculate(float K_0, float K_1, float K_2, float A, float Torque, float Omega)

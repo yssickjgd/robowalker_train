@@ -26,12 +26,16 @@
 #include "1_Middleware/Algorithm/Matrix/alg_matrix.h"
 #include "1_Middleware/Driver/WDG/drv_wdg.h"
 #include "1_Middleware/System/Timestamp/sys_timestamp.h"
+#include "2_Device/Plotter/Serialplot/dvc_serialplot.h"
 
 /* Private macros ------------------------------------------------------------*/
 
 /* Private types -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+
+// 串口绘图
+Class_Serialplot_USB Serialplot_USB;
 
 // 大疆电机
 Class_Motor_DJI_GM6020 motor_6020;
@@ -120,8 +124,8 @@ void Task1ms_Callback()
     float now_angle_6020 = motor_6020.Get_Now_Angle();
     float target_omega_6020 = motor_6020.Get_Target_Omega();
     float now_omega_6020 = motor_6020.Get_Now_Omega();
-    Vofa_USB.Set_Data(6, &target_omega_3508, &now_omega_3508, &target_angle_6020, &now_angle_6020, &target_omega_6020, &now_omega_6020);
-    Vofa_USB.TIM_1ms_Write_PeriodElapsedCallback();
+    Serialplot_USB.Set_Data(6, &target_omega_3508, &now_omega_3508, &target_angle_6020, &now_angle_6020, &target_omega_6020, &now_omega_6020);
+    Serialplot_USB.TIM_1ms_Write_PeriodElapsedCallback();
 
     TIM_1ms_IWDG_PeriodElapsedCallback();
 }
@@ -155,7 +159,7 @@ void Task_Init()
     CAN_Init(&hfdcan1, Can_Callback_Function);
 
     // Vofa初始化
-    Vofa_USB.Init();
+    Serialplot_USB.Init();
 
     // 大疆电机
     motor_6020.Init(&hfdcan1, Motor_DJI_ID_0x205, Motor_DJI_Control_Method_ANGLE);

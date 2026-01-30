@@ -144,15 +144,11 @@ void Task_Init()
     Motor_4310.Init(&hfdcan1, Motor_DM_ID_0x301, Motor_DM_Control_Method_1_TO_4_ANGLE, 0, PI, 10.0f);
     Serialplot_USB.Init();
 
-    HAL_Delay(3000);
-
     // 标记初始化完成
     init_finished = true;
 
     // 喂狗
     IWDG_Independent_Feed();
-
-    HAL_Delay(3000);
 
     // 定时器中断初始化
     HAL_TIM_Base_Start_IT(&htim4);

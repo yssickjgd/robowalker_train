@@ -26,10 +26,10 @@
 /* Exported types ------------------------------------------------------------*/
 
 /**
- * @brief Specialized, vofa工具, justfloat模式
+ * @brief Reusable, vofa工具, justfloat模式
  *
  */
-class Class_Vofa
+class Class_Vofa_UART
 {
 public:
     void Init(const UART_HandleTypeDef *huart, const uint8_t &__Rx_Variable_Assignment_Num = 0, const char **__Rx_Variable_Assignment_List = NULL, const uint32_t &__Frame_Tail = 0x7f800000);
@@ -90,7 +90,7 @@ protected:
 };
 
 /**
- * @brief Specialized, vofa工具, justfloat模式
+ * @brief Reusable, vofa工具, justfloat模式
  *
  */
 class Class_Vofa_USB
@@ -155,9 +155,6 @@ protected:
 
 /* Exported variables --------------------------------------------------------*/
 
-extern Class_Vofa Vofa;
-extern Class_Vofa_USB Vofa_USB;
-
 /* Exported function declarations --------------------------------------------*/
 
 /**
@@ -165,7 +162,7 @@ extern Class_Vofa_USB Vofa_USB;
  *
  * @return int32_t 当前接收的指令在指令字典中的编号
  */
-inline int32_t Class_Vofa::Get_Variable_Index() const
+inline int32_t Class_Vofa_UART::Get_Variable_Index() const
 {
     return (Variable_Index);
 }
@@ -175,7 +172,7 @@ inline int32_t Class_Vofa::Get_Variable_Index() const
  *
  * @return float 当前接收的指令在指令字典中的值
  */
-inline float Class_Vofa::Get_Variable_Value() const
+inline float Class_Vofa_UART::Get_Variable_Value() const
 {
     return (Variable_Value);
 }
@@ -186,7 +183,7 @@ inline float Class_Vofa::Get_Variable_Value() const
  * @param Number 添加的数据数量
  * @param ... 每个数据的指针
  */
-inline void Class_Vofa::Set_Data(const int &Number, ...)
+inline void Class_Vofa_UART::Set_Data(const int &Number, ...)
 {
     va_list data_ptr;
     va_start(data_ptr, Number);

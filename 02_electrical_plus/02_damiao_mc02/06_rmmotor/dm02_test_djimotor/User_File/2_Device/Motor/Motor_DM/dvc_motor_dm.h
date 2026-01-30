@@ -170,9 +170,6 @@ struct Struct_Motor_DM_Rx_Data_Normal
     float Now_Torque;
     float Now_MOS_Temperature;
     float Now_Rotor_Temperature;
-    uint32_t Pre_Encoder;
-    int32_t Total_Encoder;
-    int32_t Total_Round;
 };
 
 /**
@@ -183,7 +180,7 @@ struct Struct_Motor_DM_Rx_Data_1_To_4
 {
     float Now_Angle;
     float Now_Omega;
-    float Now_Current;
+    float Now_Torque;
     float Now_MOS_Temperature;
     float Now_Rotor_Temperature;
     uint32_t Pre_Encoder;
@@ -194,49 +191,49 @@ struct Struct_Motor_DM_Rx_Data_1_To_4
 /**
  * @brief Reusable, 达妙电机, 传统模式
  * 没有零点, 可在上位机调零点
- * 初始化的角度, 角速度, 扭矩, 电流等参数是J4310电机默认值
+ * 初始化的角度, 角速度, 扭矩等参数是J4310电机默认值
  *
  */
 class Class_Motor_DM_Normal
 {
 public:
-    void Init(const FDCAN_HandleTypeDef *hcan, const uint8_t &__CAN_Rx_ID, const uint8_t &__CAN_Tx_ID, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT, const float &__Angle_Max = 12.5f, const float &__Omega_Max = 25.0f, const float &__Torque_Max = 10.0f, const float &__Current_Max = 10.261194f);
+    void Init(const FDCAN_HandleTypeDef *hcan, const uint8_t &__CAN_Rx_ID = 0x00, const uint8_t &__CAN_Tx_ID = 0x01, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method = Motor_DM_Control_Method_NORMAL_MIT, const float &__Angle_Max = 12.5f, const float &__Omega_Max = 25.0f, const float &__Torque_Max = 10.0f, const float &__Current_Max = 10.261194f);
 
-    inline float Get_Angle_Max();
+    inline float Get_Angle_Max() const;
 
-    inline float Get_Omega_Max();
+    inline float Get_Omega_Max() const;
 
-    inline float Get_Torque_Max();
+    inline float Get_Torque_Max() const;
 
-    inline float Get_Current_Max();
+    inline float Get_Current_Max() const;
 
-    inline Enum_Motor_DM_Status Get_Status();
+    inline Enum_Motor_DM_Status Get_Status() const;
 
-    inline Enum_Motor_DM_Control_Status_Normal Get_Control_Status();
+    inline Enum_Motor_DM_Control_Status_Normal Get_Control_Status() const;
 
-    inline float Get_Now_Angle();
+    inline float Get_Now_Angle() const;
 
-    inline float Get_Now_Omega();
+    inline float Get_Now_Omega() const;
 
-    inline float Get_Now_Torque();
+    inline float Get_Now_Torque() const;
 
-    inline float Get_Now_MOS_Temperature();
+    inline float Get_Now_MOS_Temperature() const;
 
-    inline float Get_Now_Rotor_Temperature();
+    inline float Get_Now_Rotor_Temperature() const;
 
-    inline Enum_Motor_DM_Control_Method Get_Control_Method();
+    inline Enum_Motor_DM_Control_Method Get_Control_Method() const;
 
-    inline float Get_Control_Angle();
+    inline float Get_Control_Angle() const;
 
-    inline float Get_Control_Omega();
+    inline float Get_Control_Omega() const;
 
-    inline float Get_Control_Torque();
+    inline float Get_Control_Torque() const;
 
-    inline float Get_Control_Current();
+    inline float Get_Control_Current() const;
 
-    inline float Get_K_P();
+    inline float Get_K_P() const;
 
-    inline float Get_K_D();
+    inline float Get_K_D() const;
 
     inline void Set_Control_Angle(const float &__Control_Angle);
 
@@ -252,15 +249,15 @@ public:
 
     void CAN_RxCpltCallback();
 
-    void CAN_Send_Clear_Error();
+    void CAN_Send_Clear_Error() const;
 
-    void CAN_Send_Enter();
+    void CAN_Send_Enter() const;
 
-    void CAN_Send_Exit();
+    void CAN_Send_Exit() const;
 
-    void CAN_Send_Save_Zero();
+    void CAN_Send_Save_Zero() const;
 
-    void TIM_Alive_PeriodElapsedCallback();
+    void TIM_100ms_Alive_PeriodElapsedCallback();
 
     void TIM_Send_PeriodElapsedCallback();
 
@@ -279,7 +276,7 @@ protected:
     float Omega_Max;
     // 最大扭矩, 与上位机控制幅值TMAX保持一致
     float Torque_Max;
-    // 最大电流, 与上位机串口中上电打印电流保持一致
+    // 最大电流, 与上位机串口中上电打印电流保持一致, EMIT模式需要
     float Current_Max;
 
     // 常量
@@ -330,8 +327,7 @@ protected:
 
 /**
  * @brief Reusable, 达妙电机, 一拖四模式
- * 没有零点, 可在上位机调零点
- *
+ * 初始化的角度, 角速度, 扭矩等参数是J4310电机默认值
  */
 class Class_Motor_DM_1_To_4
 {
@@ -341,35 +337,31 @@ public:
     // PID角速度环控制
     Class_PID PID_Omega;
 
-    void Init(const FDCAN_HandleTypeDef *hcan, const Enum_Motor_DM_Motor_ID_1_To_4 &__CAN_Rx_ID, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method = Motor_DM_Control_Method_1_TO_4_ANGLE, const int32_t &__Encoder_Offset = 0, const float &__Current_Max = 10.261194f);
+    void Init(const FDCAN_HandleTypeDef *hcan, const Enum_Motor_DM_Motor_ID_1_To_4 &__CAN_Rx_ID, const Enum_Motor_DM_Control_Method &__Motor_DM_Control_Method = Motor_DM_Control_Method_1_TO_4_ANGLE, const int32_t &__Encoder_Offset = 0, const float &__Nearest_Angle = 0.0f, const float &__Gearbox_Rate = 10.0f);
 
-    inline float Get_Current_Max();
+    inline Enum_Motor_DM_Status Get_Status() const;
 
-    inline float Get_Theoretical_Output_Current_Max();
+    inline float Get_Now_Angle() const;
 
-    inline Enum_Motor_DM_Status Get_Status();
+    inline float Get_Now_Omega() const;
 
-    inline float Get_Now_Angle();
+    inline float Get_Now_Torque() const;
 
-    inline float Get_Now_Omega();
+    inline float Get_Now_MOS_Temperature() const;
 
-    inline float Get_Now_Current();
+    inline float Get_Now_Rotor_Temperature() const;
 
-    inline float Get_Now_MOS_Temperature();
+    inline Enum_Motor_DM_Control_Method Get_Control_Method() const;
 
-    inline float Get_Now_Rotor_Temperature();
+    inline float Get_Target_Angle() const;
 
-    inline Enum_Motor_DM_Control_Method Get_Control_Method();
+    inline float Get_Target_Omega() const;
 
-    inline float Get_Target_Angle();
+    inline float Get_Target_Torque() const;
 
-    inline float Get_Target_Omega();
+    inline float Get_Feedforward_Omega() const;
 
-    inline float Get_Target_Current();
-
-    inline float Get_Feedforward_Omega();
-
-    inline float Get_Feedforward_Current();
+    inline float Get_Feedforward_Torque() const;
 
     inline void Set_Control_Method(const Enum_Motor_DM_Control_Method &__DM_Motor_Control_Method);
 
@@ -377,17 +369,17 @@ public:
 
     inline void Set_Target_Omega(const float &__Target_Omega);
 
-    inline void Set_Target_Current(const float &__Target_Current);
+    inline void Set_Target_Torque(const float &__Target_Torque);
 
     inline void Set_Feedforward_Omega(const float &__Feedforward_Omega);
 
-    inline void Set_Feedforward_Current(const float &__Feedforward_Current);
+    inline void Set_Feedforward_Torque(const float &__Feedforward_Torque);
 
     void CAN_RxCpltCallback();
 
     void TIM_100ms_Alive_PeriodElapsedCallback();
 
-    void TIM_1ms_Calculate_PeriodElapsedCallback();
+    void TIM_Calculate_PeriodElapsedCallback();
 
 protected:
     // 初始化相关变量
@@ -396,22 +388,26 @@ protected:
     Struct_CAN_Manage_Object *CAN_Manage_Object;
     // 收数据绑定的CAN ID, 达妙系列0x301~0x308
     Enum_Motor_DM_Motor_ID_1_To_4 CAN_Rx_ID;
-    // 编码器偏移
-    int32_t Encoder_Offset;
     // 发送缓存区
     uint8_t *Tx_Data;
-    // 最大电流
-    float Current_Max;
+    // 编码器偏移
+    int32_t Encoder_Offset;
+    // 就近转位的单次最大旋转角度, 其数值一般为圆周的整数倍或纯小数倍, 且纯小数倍时可均分圆周, 0表示不启用就近转位
+    float Nearest_Angle;
+    // 减速比, 默认带减速箱
+    float Gearbox_Rate;
 
     // 常量
 
     // 一圈编码器刻度
-    uint16_t Encoder_Num_Per_Round = 8192;
+    uint16_t ENCODER_NUM_PER_ROUND = 8192;
 
-    // 电流到输出的转化系数
-    float Current_To_Out = 16384.0f / 10.261194f;
-    // 理论最大输出电流
-    float Theoretical_Output_Current_Max = 10.261194f;
+    // 扭矩电流常数, 由于电机手册没给, 则以额定扭矩除以额定电流计算
+    const float CURRENT_TO_TORQUE = 1.2f / 10.0f;
+    // 扭矩电流到输出刻度的转化系数
+    const float CURRENT_TO_OUT = 16384.0f / 10.261194f;
+    // 最大输出刻度
+    const float OUT_MAX = 16384.0f;
 
     // 内部变量
 
@@ -439,12 +435,12 @@ protected:
     float Target_Angle = 0.0f;
     // 目标的速度, rad/s
     float Target_Omega = 0.0f;
-    // 目标的电流, A
-    float Target_Current = 0.0f;
+    // 目标的扭矩, Nm
+    float Target_Torque = 0.0f;
     // 前馈的速度, rad/s
     float Feedforward_Omega = 0.0f;
-    // 前馈的电流, A
-    float Feedforward_Current = 0.0f;
+    // 前馈的扭矩, Nm
+    float Feedforward_Torque = 0.0f;
 
     // 内部函数
 
@@ -464,7 +460,7 @@ protected:
  *
  * @return float 角度最大值
  */
-inline float Class_Motor_DM_Normal::Get_Angle_Max()
+inline float Class_Motor_DM_Normal::Get_Angle_Max() const
 {
     return (Angle_Max);
 }
@@ -474,7 +470,7 @@ inline float Class_Motor_DM_Normal::Get_Angle_Max()
  *
  * @return float 角速度最大值
  */
-inline float Class_Motor_DM_Normal::Get_Omega_Max()
+inline float Class_Motor_DM_Normal::Get_Omega_Max() const
 {
     return (Omega_Max);
 }
@@ -484,7 +480,7 @@ inline float Class_Motor_DM_Normal::Get_Omega_Max()
  *
  * @return float 扭矩最大值
  */
-inline float Class_Motor_DM_Normal::Get_Torque_Max()
+inline float Class_Motor_DM_Normal::Get_Torque_Max() const
 {
     return (Torque_Max);
 }
@@ -494,7 +490,7 @@ inline float Class_Motor_DM_Normal::Get_Torque_Max()
  *
  * @return float 电流最大值
  */
-inline float Class_Motor_DM_Normal::Get_Current_Max()
+inline float Class_Motor_DM_Normal::Get_Current_Max() const
 {
     return (Current_Max);
 }
@@ -504,7 +500,7 @@ inline float Class_Motor_DM_Normal::Get_Current_Max()
  *
  * @return Enum_Motor_DM_Status 电机状态
  */
-inline Enum_Motor_DM_Status Class_Motor_DM_Normal::Get_Status()
+inline Enum_Motor_DM_Status Class_Motor_DM_Normal::Get_Status() const
 {
     return (Motor_DM_Status);
 }
@@ -514,7 +510,7 @@ inline Enum_Motor_DM_Status Class_Motor_DM_Normal::Get_Status()
  *
  * @return Enum_Motor_DM_Control_Status_Normal 电机控制状态
  */
-inline Enum_Motor_DM_Control_Status_Normal Class_Motor_DM_Normal::Get_Control_Status()
+inline Enum_Motor_DM_Control_Status_Normal Class_Motor_DM_Normal::Get_Control_Status() const
 {
     return (Rx_Data.Control_Status);
 }
@@ -524,7 +520,7 @@ inline Enum_Motor_DM_Control_Status_Normal Class_Motor_DM_Normal::Get_Control_St
  *
  * @return float 当前角度
  */
-inline float Class_Motor_DM_Normal::Get_Now_Angle()
+inline float Class_Motor_DM_Normal::Get_Now_Angle() const
 {
     return (Rx_Data.Now_Angle);
 }
@@ -534,7 +530,7 @@ inline float Class_Motor_DM_Normal::Get_Now_Angle()
  *
  * @return float 当前角速度
  */
-inline float Class_Motor_DM_Normal::Get_Now_Omega()
+inline float Class_Motor_DM_Normal::Get_Now_Omega() const
 {
     return (Rx_Data.Now_Omega);
 }
@@ -544,7 +540,7 @@ inline float Class_Motor_DM_Normal::Get_Now_Omega()
  *
  * @return float 当前扭矩
  */
-inline float Class_Motor_DM_Normal::Get_Now_Torque()
+inline float Class_Motor_DM_Normal::Get_Now_Torque() const
 {
     return (Rx_Data.Now_Torque);
 }
@@ -554,7 +550,7 @@ inline float Class_Motor_DM_Normal::Get_Now_Torque()
  *
  * @return float 当前MOS温度
  */
-inline float Class_Motor_DM_Normal::Get_Now_MOS_Temperature()
+inline float Class_Motor_DM_Normal::Get_Now_MOS_Temperature() const
 {
     return (Rx_Data.Now_MOS_Temperature);
 }
@@ -564,7 +560,7 @@ inline float Class_Motor_DM_Normal::Get_Now_MOS_Temperature()
  *
  * @return float 当前转子温度
  */
-inline float Class_Motor_DM_Normal::Get_Now_Rotor_Temperature()
+inline float Class_Motor_DM_Normal::Get_Now_Rotor_Temperature() const
 {
     return (Rx_Data.Now_Rotor_Temperature);
 }
@@ -574,7 +570,7 @@ inline float Class_Motor_DM_Normal::Get_Now_Rotor_Temperature()
  *
  * @return Enum_Motor_DM_Control_Method 电机控制方式
  */
-inline Enum_Motor_DM_Control_Method Class_Motor_DM_Normal::Get_Control_Method()
+inline Enum_Motor_DM_Control_Method Class_Motor_DM_Normal::Get_Control_Method() const
 {
     return (Motor_DM_Control_Method);
 }
@@ -584,7 +580,7 @@ inline Enum_Motor_DM_Control_Method Class_Motor_DM_Normal::Get_Control_Method()
  *
  * @return float 角度, rad, 目标角度
  */
-inline float Class_Motor_DM_Normal::Get_Control_Angle()
+inline float Class_Motor_DM_Normal::Get_Control_Angle() const
 {
     return (Control_Angle);
 }
@@ -594,7 +590,7 @@ inline float Class_Motor_DM_Normal::Get_Control_Angle()
  *
  * @return float 角速度, rad/s, MIT模式和速度模式是目标角速度, 其余模式是限幅
  */
-inline float Class_Motor_DM_Normal::Get_Control_Omega()
+inline float Class_Motor_DM_Normal::Get_Control_Omega() const
 {
     return (Control_Omega);
 }
@@ -604,7 +600,7 @@ inline float Class_Motor_DM_Normal::Get_Control_Omega()
  *
  * @return float 扭矩, Nm, MIT模式是目标扭矩, EMIT模式无效, 其余模式是限幅
  */
-inline float Class_Motor_DM_Normal::Get_Control_Torque()
+inline float Class_Motor_DM_Normal::Get_Control_Torque() const
 {
     return (Control_Torque);
 }
@@ -614,7 +610,7 @@ inline float Class_Motor_DM_Normal::Get_Control_Torque()
  *
  * @return float 电流, A, EMIT模式是限幅, 其余模式无效
  */
-inline float Class_Motor_DM_Normal::Get_Control_Current()
+inline float Class_Motor_DM_Normal::Get_Control_Current() const
 {
     return (Control_Current);
 }
@@ -624,7 +620,7 @@ inline float Class_Motor_DM_Normal::Get_Control_Current()
  *
  * @return float K_P, 0~500, MIT模式有效
  */
-inline float Class_Motor_DM_Normal::Get_K_P()
+inline float Class_Motor_DM_Normal::Get_K_P() const
 {
     return (K_P);
 }
@@ -634,7 +630,7 @@ inline float Class_Motor_DM_Normal::Get_K_P()
  *
  * @return float K_D, 0~5, MIT模式有效
  */
-inline float Class_Motor_DM_Normal::Get_K_D()
+inline float Class_Motor_DM_Normal::Get_K_D() const
 {
     return (K_D);
 }
@@ -700,31 +696,11 @@ inline void Class_Motor_DM_Normal::Set_K_D(const float &__K_D)
 }
 
 /**
- * @brief 获取电流最大值
- *
- * @return float 电流最大值
- */
-inline float Class_Motor_DM_1_To_4::Get_Current_Max()
-{
-    return (Current_Max);
-}
-
-/**
- * @brief 获取理论最大输出电流
- *
- * @return float 理论最大输出电流
- */
-inline float Class_Motor_DM_1_To_4::Get_Theoretical_Output_Current_Max()
-{
-    return (Theoretical_Output_Current_Max);
-}
-
-/**
  * @brief 获取电机状态
  *
  * @return Enum_Motor_DM_Status 电机状态
  */
-inline Enum_Motor_DM_Status Class_Motor_DM_1_To_4::Get_Status()
+inline Enum_Motor_DM_Status Class_Motor_DM_1_To_4::Get_Status() const
 {
     return (Motor_DM_Status);
 }
@@ -734,7 +710,7 @@ inline Enum_Motor_DM_Status Class_Motor_DM_1_To_4::Get_Status()
  *
  * @return float 当前角度
  */
-inline float Class_Motor_DM_1_To_4::Get_Now_Angle()
+inline float Class_Motor_DM_1_To_4::Get_Now_Angle() const
 {
     return (Rx_Data.Now_Angle);
 }
@@ -744,19 +720,19 @@ inline float Class_Motor_DM_1_To_4::Get_Now_Angle()
  *
  * @return float 当前角速度
  */
-inline float Class_Motor_DM_1_To_4::Get_Now_Omega()
+inline float Class_Motor_DM_1_To_4::Get_Now_Omega() const
 {
     return (Rx_Data.Now_Omega);
 }
 
 /**
- * @brief 获取当前电流
+ * @brief 获取当前扭矩
  *
- * @return float 当前电流
+ * @return float 当前扭矩
  */
-inline float Class_Motor_DM_1_To_4::Get_Now_Current()
+inline float Class_Motor_DM_1_To_4::Get_Now_Torque() const
 {
-    return (Rx_Data.Now_Current);
+    return (Rx_Data.Now_Torque);
 }
 
 /**
@@ -764,7 +740,7 @@ inline float Class_Motor_DM_1_To_4::Get_Now_Current()
  *
  * @return float 当前MOS温度
  */
-inline float Class_Motor_DM_1_To_4::Get_Now_MOS_Temperature()
+inline float Class_Motor_DM_1_To_4::Get_Now_MOS_Temperature() const
 {
     return (Rx_Data.Now_MOS_Temperature);
 }
@@ -774,7 +750,7 @@ inline float Class_Motor_DM_1_To_4::Get_Now_MOS_Temperature()
  *
  * @return float 当前转子温度
  */
-inline float Class_Motor_DM_1_To_4::Get_Now_Rotor_Temperature()
+inline float Class_Motor_DM_1_To_4::Get_Now_Rotor_Temperature() const
 {
     return (Rx_Data.Now_Rotor_Temperature);
 }
@@ -784,7 +760,7 @@ inline float Class_Motor_DM_1_To_4::Get_Now_Rotor_Temperature()
  *
  * @return Enum_Motor_DM_Control_Method 电机控制方式
  */
-inline Enum_Motor_DM_Control_Method Class_Motor_DM_1_To_4::Get_Control_Method()
+inline Enum_Motor_DM_Control_Method Class_Motor_DM_1_To_4::Get_Control_Method() const
 {
     return (Motor_DM_Control_Method);
 }
@@ -794,7 +770,7 @@ inline Enum_Motor_DM_Control_Method Class_Motor_DM_1_To_4::Get_Control_Method()
  *
  * @return float 目标的角度
  */
-inline float Class_Motor_DM_1_To_4::Get_Target_Angle()
+inline float Class_Motor_DM_1_To_4::Get_Target_Angle() const
 {
     return (Target_Angle);
 }
@@ -804,19 +780,19 @@ inline float Class_Motor_DM_1_To_4::Get_Target_Angle()
  *
  * @return float 目标的速度, rad/s
  */
-inline float Class_Motor_DM_1_To_4::Get_Target_Omega()
+inline float Class_Motor_DM_1_To_4::Get_Target_Omega() const
 {
     return (Target_Omega);
 }
 
 /**
- * @brief 获取目标的电流, A
+ * @brief 获取目标的扭矩, Nm
  *
- * @return float 目标的电流, A
+ * @return float 目标的扭矩, Nm
  */
-inline float Class_Motor_DM_1_To_4::Get_Target_Current()
+inline float Class_Motor_DM_1_To_4::Get_Target_Torque() const
 {
-    return (Target_Current);
+    return (Target_Torque);
 }
 
 /**
@@ -824,19 +800,19 @@ inline float Class_Motor_DM_1_To_4::Get_Target_Current()
  *
  * @return float 前馈的速度, rad/s
  */
-inline float Class_Motor_DM_1_To_4::Get_Feedforward_Omega()
+inline float Class_Motor_DM_1_To_4::Get_Feedforward_Omega() const
 {
     return (Feedforward_Omega);
 }
 
 /**
- * @brief 获取前馈的电流, A
+ * @brief 获取前馈的扭矩, Nm
  *
- * @return float 前馈的电流, A
+ * @return float 前馈的扭矩, Nm
  */
-inline float Class_Motor_DM_1_To_4::Get_Feedforward_Current()
+inline float Class_Motor_DM_1_To_4::Get_Feedforward_Torque() const
 {
-    return (Feedforward_Current);
+    return (Feedforward_Torque);
 }
 
 /**
@@ -857,6 +833,12 @@ inline void Class_Motor_DM_1_To_4::Set_Control_Method(const Enum_Motor_DM_Contro
 inline void Class_Motor_DM_1_To_4::Set_Target_Angle(const float &__Target_Angle)
 {
     Target_Angle = __Target_Angle;
+    if (Nearest_Angle != 0.0f)
+    {
+        float delta_angle = Basic_Math_Modulus_Normalization(Target_Angle - Rx_Data.Now_Angle, Nearest_Angle * 2.0f);
+
+        Target_Angle = Rx_Data.Now_Angle + delta_angle;
+    }
 }
 
 /**
@@ -870,13 +852,13 @@ inline void Class_Motor_DM_1_To_4::Set_Target_Omega(const float &__Target_Omega)
 }
 
 /**
- * @brief 设定目标的电流, A
+ * @brief 设定目标的扭矩, Nm
  *
- * @param __Target_Current 目标的电流, A
+ * @param __Target_Torque 目标的扭矩, Nm
  */
-inline void Class_Motor_DM_1_To_4::Set_Target_Current(const float &__Target_Current)
+inline void Class_Motor_DM_1_To_4::Set_Target_Torque(const float &__Target_Torque)
 {
-    Target_Current = __Target_Current;
+    Target_Torque = __Target_Torque;
 }
 
 /**
@@ -890,13 +872,13 @@ inline void Class_Motor_DM_1_To_4::Set_Feedforward_Omega(const float &__Feedforw
 }
 
 /**
- * @brief 设定前馈的电流, A
+ * @brief 设定前馈的扭矩, Nm
  *
- * @param __Feedforward_Current 前馈的电流, A
+ * @param __Feedforward_Torque 前馈的扭矩, Nm
  */
-inline void Class_Motor_DM_1_To_4::Set_Feedforward_Current(const float &__Feedforward_Current)
+inline void Class_Motor_DM_1_To_4::Set_Feedforward_Torque(const float &__Feedforward_Torque)
 {
-    Feedforward_Current = __Feedforward_Current;
+    Feedforward_Torque = __Feedforward_Torque;
 }
 
 #endif

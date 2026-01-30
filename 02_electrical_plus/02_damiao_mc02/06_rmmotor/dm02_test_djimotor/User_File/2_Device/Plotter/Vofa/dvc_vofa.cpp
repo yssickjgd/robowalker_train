@@ -19,9 +19,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-Class_Vofa Vofa;
-Class_Vofa_USB Vofa_USB;
-
 /* Private function declarations ---------------------------------------------*/
 
 /* Function prototypes -------------------------------------------------------*/
@@ -34,7 +31,7 @@ Class_Vofa_USB Vofa_USB;
  * @param __Rx_Variable_Assignment_List 接收指令字典列表
  * @param __Frame_Tail 帧尾标识符
  */
-void Class_Vofa::Init(const UART_HandleTypeDef *huart, const uint8_t &__Rx_Variable_Assignment_Num, const char **__Rx_Variable_Assignment_List, const uint32_t &__Frame_Tail)
+void Class_Vofa_UART::Init(const UART_HandleTypeDef *huart, const uint8_t &__Rx_Variable_Assignment_Num, const char **__Rx_Variable_Assignment_List, const uint32_t &__Frame_Tail)
 {
     if (huart->Instance == USART1)
     {
@@ -80,7 +77,7 @@ void Class_Vofa::Init(const UART_HandleTypeDef *huart, const uint8_t &__Rx_Varia
  * @param Rx_Data 接收的数据
  * @param Length 接收数据长度
  */
-void Class_Vofa::UART_RxCpltCallback(const uint8_t *Rx_Data, const uint16_t &Length)
+void Class_Vofa_UART::UART_RxCpltCallback(const uint8_t *Rx_Data, const uint16_t &Length)
 {
     Data_Process(Length);
 }
@@ -89,7 +86,7 @@ void Class_Vofa::UART_RxCpltCallback(const uint8_t *Rx_Data, const uint16_t &Len
  * @brief TIM定时器中断增加数据到发送缓冲区
  *
  */
-void Class_Vofa::TIM_1ms_Write_PeriodElapsedCallback()
+void Class_Vofa_UART::TIM_1ms_Write_PeriodElapsedCallback()
 {
     Output();
 
@@ -101,7 +98,7 @@ void Class_Vofa::TIM_1ms_Write_PeriodElapsedCallback()
  *
  * @param Length 接收数据长度
  */
-void Class_Vofa::Data_Process(const uint16_t &Length)
+void Class_Vofa_UART::Data_Process(const uint16_t &Length)
 {
     int flag;
     flag = _Judge_Variable_Name(Length);
@@ -114,7 +111,7 @@ void Class_Vofa::Data_Process(const uint16_t &Length)
  * @param Length 接收数据长度
  * @return uint8_t 指令数值位置的指针, 也就是"variable=value#"中v的坐标
  */
-uint8_t Class_Vofa::_Judge_Variable_Name(const uint16_t &Length)
+uint8_t Class_Vofa_UART::_Judge_Variable_Name(const uint16_t &Length)
 {
     // 临时存储变量名
     char tmp_variable_name[VOFA_RX_VARIABLE_ASSIGNMENT_MAX_LENGTH];
@@ -149,7 +146,7 @@ uint8_t Class_Vofa::_Judge_Variable_Name(const uint16_t &Length)
  * @param Length 接收数据长度
  * @param flag 指令数值位置的指针
  */
-void Class_Vofa::_Judge_Variable_Value(const uint16_t &Length, int flag)
+void Class_Vofa_UART::_Judge_Variable_Value(const uint16_t &Length, int flag)
 {
     // 小数点位置, 是否有负号
     int tmp_dot_flag, tmp_sign_coefficient, i;
@@ -197,7 +194,7 @@ void Class_Vofa::_Judge_Variable_Value(const uint16_t &Length, int flag)
  * @brief vofa数据输出到UART发送缓冲区
  *
  */
-void Class_Vofa::Output()
+void Class_Vofa_UART::Output()
 {
     uint8_t *tmp_buffer = Tx_Buffer;
 
