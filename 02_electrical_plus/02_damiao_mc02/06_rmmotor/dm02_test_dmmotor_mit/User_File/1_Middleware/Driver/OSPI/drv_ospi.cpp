@@ -34,19 +34,21 @@ Struct_OSPI_Manage_Object OSPI2_Manage_Object = {nullptr};
  * @param Auto_Polling_Callback_Function 自动轮询完成回调函数
  * @param Rx_Callback_Function 接收完成回调函数
  */
-void OSPI_Init(OSPI_HandleTypeDef *hospi, OSPI_Status_Match_Callback Auto_Polling_Callback_Function, OSPI_Rx_Callback Rx_Callback_Function)
+void OSPI_Init(OSPI_HandleTypeDef *hospi, OSPI_Status_Match_Callback Auto_Polling_Callback_Function, OSPI_Rx_Callback Rx_Callback_Function, OSPI_Tx_Callback Tx_Callback_Function)
 {
     if (hospi->Instance == OCTOSPI1)
     {
         OSPI1_Manage_Object.OSPI_Handler = hospi;
         OSPI1_Manage_Object.Status_Match_Callback_Function = Auto_Polling_Callback_Function;
         OSPI1_Manage_Object.Rx_Callback_Function = Rx_Callback_Function;
+        OSPI1_Manage_Object.Tx_Callback_Function = Tx_Callback_Function;
     }
     else if (hospi->Instance == OCTOSPI2)
     {
         OSPI2_Manage_Object.OSPI_Handler = hospi;
         OSPI2_Manage_Object.Status_Match_Callback_Function = Auto_Polling_Callback_Function;
         OSPI2_Manage_Object.Rx_Callback_Function = Rx_Callback_Function;
+        OSPI2_Manage_Object.Tx_Callback_Function = Tx_Callback_Function;
     }
 }
 
@@ -181,7 +183,7 @@ void HAL_OSPI_RxCpltCallback(OSPI_HandleTypeDef *hospi)
 
         if (OSPI1_Manage_Object.Rx_Callback_Function != nullptr)
         {
-            OSPI1_Manage_Object.Rx_Callback_Function(OSPI1_Manage_Object.Rx_Buffer, OSPI_BUFFER_SIZE);
+            OSPI1_Manage_Object.Rx_Callback_Function(OSPI1_Manage_Object.Rx_Buffer);
         }
     }
     else if (hospi->Instance == OCTOSPI2)
@@ -190,7 +192,30 @@ void HAL_OSPI_RxCpltCallback(OSPI_HandleTypeDef *hospi)
 
         if (OSPI2_Manage_Object.Rx_Callback_Function != nullptr)
         {
-            OSPI2_Manage_Object.Rx_Callback_Function(OSPI2_Manage_Object.Rx_Buffer, OSPI_BUFFER_SIZE);
+            OSPI2_Manage_Object.Rx_Callback_Function(OSPI2_Manage_Object.Rx_Buffer);
+        }
+    }
+}
+
+/**
+ * @brief HAL库OSPI发送回调函数
+ *
+ * @param hospi OSPI编号
+ */
+void HAL_OSPI_TxCpltCallback(OSPI_HandleTypeDef *hospi)
+{
+    if (hospi->Instance == OCTOSPI1)
+    {
+        if (OSPI1_Manage_Object.Tx_Callback_Function != nullptr)
+        {
+            OSPI1_Manage_Object.Tx_Callback_Function(OSPI1_Manage_Object.Tx_Buffer);
+        }
+    }
+    else if (hospi->Instance == OCTOSPI2)
+    {
+        if (OSPI2_Manage_Object.Tx_Callback_Function != nullptr)
+        {
+            OSPI2_Manage_Object.Tx_Callback_Function(OSPI2_Manage_Object.Tx_Buffer);
         }
     }
 }

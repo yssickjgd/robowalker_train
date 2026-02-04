@@ -28,7 +28,9 @@
 
 typedef void (*OSPI_Status_Match_Callback)();
 
-typedef void (*OSPI_Rx_Callback)(uint8_t *Buffer, uint16_t Length);
+typedef void (*OSPI_Rx_Callback)(uint8_t *Buffer);
+
+typedef void (*OSPI_Tx_Callback)(uint8_t *Buffer);
 
 /**
  * @brief OSPI通信处理结构体
@@ -39,6 +41,7 @@ struct Struct_OSPI_Manage_Object
     OSPI_HandleTypeDef *OSPI_Handler;
     OSPI_Status_Match_Callback Status_Match_Callback_Function;
     OSPI_Rx_Callback Rx_Callback_Function;
+    OSPI_Tx_Callback Tx_Callback_Function;
 
     // 收发缓冲区
     uint8_t Tx_Buffer[OSPI_BUFFER_SIZE];
@@ -59,7 +62,7 @@ extern struct Struct_OSPI_Manage_Object OSPI2_Manage_Object;
 
 /* Exported function declarations ---------------------------------------------*/
 
-void OSPI_Init(OSPI_HandleTypeDef *hospi, OSPI_Status_Match_Callback Auto_Polling_Callback_Function, OSPI_Rx_Callback Rx_Callback_Function);
+void OSPI_Init(OSPI_HandleTypeDef *hospi, OSPI_Status_Match_Callback Auto_Polling_Callback_Function, OSPI_Rx_Callback Rx_Callback_Function, OSPI_Tx_Callback Tx_Callback_Function);
 
 void OSPI_Auto_Polling(OSPI_HandleTypeDef * hospi, OSPI_AutoPollingTypeDef * Config);
 
