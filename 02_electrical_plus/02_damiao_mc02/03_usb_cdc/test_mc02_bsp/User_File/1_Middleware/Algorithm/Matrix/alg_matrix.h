@@ -263,7 +263,7 @@ public:
         {
             for (int i = 0; i < row * column; i++)
             {
-                if (fabs(Data[i] - Matrix.Matrix_Data[i]) > Matrix_Compare_Epsilon)
+                if (fabs(Data[i] - Matrix.Data[i]) > Matrix_Compare_Epsilon)
                 {
                     return (false);
                 }
@@ -300,9 +300,9 @@ public:
 
     inline float Get_Trace() const;
 
-    inline Class_Matrix_f32<row, 1> Get_Row(const int &Row_Index) const;
+    inline Class_Matrix_f32<1, column> Get_Row(const int &Row_Index) const;
 
-    inline Class_Matrix_f32<1, column> Get_Column(const int &Column_Index) const;
+    inline Class_Matrix_f32<row, 1> Get_Column(const int &Column_Index) const;
 
     // 方阵特有
 
@@ -453,9 +453,9 @@ inline float Class_Matrix_f32<row, column>::Get_Trace() const
  * @return Class_Matrix_f32<row, 1> 行向量
  */
 template<int row, int column>
-inline Class_Matrix_f32<row, 1> Class_Matrix_f32<row, column>::Get_Row(const int &Row_Index) const
+inline Class_Matrix_f32<1, column> Class_Matrix_f32<row, column>::Get_Row(const int &Row_Index) const
 {
-    Class_Matrix_f32<row, 1> result;
+    Class_Matrix_f32<1, column> result;
 
     memcpy(result.Data, &Data[Row_Index * column], sizeof(float) * column);
 
@@ -471,16 +471,16 @@ inline Class_Matrix_f32<row, 1> Class_Matrix_f32<row, column>::Get_Row(const int
  * @return Class_Matrix_f32<1, column> 列向量
  */
 template<int row, int column>
-inline Class_Matrix_f32<1, column> Class_Matrix_f32<row, column>::Get_Column(const int &Column_Index) const
+inline Class_Matrix_f32<row, 1> Class_Matrix_f32<row, column>::Get_Column(const int &Column_Index) const
 {
-    float result[column];
+    Class_Matrix_f32<row, 1> result;
 
     for (int i = 0; i < row; i++)
     {
-        result.Matrix_Data[i] = Data[i * column + Column_Index];
+        result.Data[i] = Data[i * column + Column_Index];
     }
 
-    return (Class_Matrix_f32<1, column>(result));
+    return (result);
 }
 
 /**
