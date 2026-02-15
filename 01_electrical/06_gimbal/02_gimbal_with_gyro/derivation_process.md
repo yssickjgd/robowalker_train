@@ -73,7 +73,7 @@
     	-  \ {^P\omega_x} \sin(\beta)
     	+ \ {^P\omega_z} \cos(\beta) \\
     	
-    \dot{\beta} = \sin(\alpha) \ {^C\omega_x} - \cos(\alpha) \ {^C\omega_y} + \ {^Y\omega_y}
+    \dot{\beta} = \sin(\alpha) \ {^C\omega_x} - \cos(\alpha) \ {^C\omega_y} + \ {^P\omega_y}
     $$
     
 
