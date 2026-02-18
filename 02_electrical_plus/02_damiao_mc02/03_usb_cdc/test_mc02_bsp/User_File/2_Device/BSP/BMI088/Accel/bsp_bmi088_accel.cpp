@@ -82,15 +82,15 @@ void Class_BMI088_Accel::Init(const bool &__Heater_Enable)
 
     for (uint8_t i = 0; i < BMI088_ACCEL_INIT_INSTRUCTION_NUM; i++)
     {
-        ((uint8_t *) (&Register))[BMI088_GYRO_REGISTER_CONFIG[i][0]] = 0x00;
-        while (((uint8_t *) (&Register))[BMI088_GYRO_REGISTER_CONFIG[i][0]] != BMI088_GYRO_REGISTER_CONFIG[i][1])
+        ((uint8_t *) (&Register))[BMI088_ACCEL_REGISTER_CONFIG[i][0]] = 0x00;
+        while (((uint8_t *) (&Register))[BMI088_ACCEL_REGISTER_CONFIG[i][0]] != BMI088_ACCEL_REGISTER_CONFIG[i][1])
         {
             // 写入寄存器
-            Write_Single_Register(BMI088_GYRO_REGISTER_CONFIG[i][0], &BMI088_GYRO_REGISTER_CONFIG[i][1]);
+            Write_Single_Register(BMI088_ACCEL_REGISTER_CONFIG[i][0], &BMI088_ACCEL_REGISTER_CONFIG[i][1]);
             Namespace_SYS_Timestamp::Delay_Millisecond(100);
 
             // 读取寄存器
-            Read_Single_Register(BMI088_GYRO_REGISTER_CONFIG[i][0]);
+            Read_Single_Register(BMI088_ACCEL_REGISTER_CONFIG[i][0]);
             Namespace_SYS_Timestamp::Delay_Millisecond(100);
         }
     }
@@ -106,9 +106,9 @@ void Class_BMI088_Accel::Init(const bool &__Heater_Enable)
  */
 void Class_BMI088_Accel::SPI_RxCpltCallback()
 {
-    uint8_t spi_init_address = SPI_Manage_Object->Tx_Buffer[0] & ~BMI088_GYRO_READ_MASK;
+    uint8_t spi_init_address = SPI_Manage_Object->Tx_Buffer[0] & ~BMI088_ACCEL_READ_MASK;
 
-    memcpy((uint8_t *) (&Register) + spi_init_address, &SPI_Manage_Object->Rx_Buffer[1 + BMI088_GYRO_SPI_RX_RESERVED], SPI_Manage_Object->Rx_Buffer_Length);
+    memcpy((uint8_t *) (&Register) + spi_init_address, &SPI_Manage_Object->Rx_Buffer[1 + BMI088_ACCEL_SPI_RX_RESERVED], SPI_Manage_Object->Rx_Buffer_Length);
 
     // 处理数据
     if (spi_init_address == offsetof(Struct_BMI088_Accel_Register, ACC_X_RO))
@@ -216,9 +216,9 @@ void Class_BMI088_Accel::TIM_128ms_Heater_PID_PeriodElapsedCallback()
  */
 void Class_BMI088_Accel::Read_Single_Register(const uint8_t &Register_Address) const
 {
-    SPI_Manage_Object->Tx_Buffer[0] = Register_Address | BMI088_GYRO_READ_MASK;
+    SPI_Manage_Object->Tx_Buffer[0] = Register_Address | BMI088_ACCEL_READ_MASK;
 
-    SPI_Transmit_Receive_Data(SPI_Manage_Object->SPI_Handler, CS_GPIO_Port, CS_Pin, Activate_Pin_State, 1 + BMI088_GYRO_SPI_RX_RESERVED, 1);
+    SPI_Transmit_Receive_Data(SPI_Manage_Object->SPI_Handler, CS_GPIO_Port, CS_Pin, Activate_Pin_State, 1 + BMI088_ACCEL_SPI_RX_RESERVED, 1);
 }
 
 /** * @brief 读取多个寄存器, 数据不会立即返回, 而是在SPI接收回调函数中处理
@@ -228,9 +228,9 @@ void Class_BMI088_Accel::Read_Single_Register(const uint8_t &Register_Address) c
  */
 void Class_BMI088_Accel::Read_Multi_Register(const uint8_t &Register_Address, const uint32_t &Rx_Length) const
 {
-    SPI_Manage_Object->Tx_Buffer[0] = Register_Address | BMI088_GYRO_READ_MASK;
+    SPI_Manage_Object->Tx_Buffer[0] = Register_Address | BMI088_ACCEL_READ_MASK;
 
-    SPI_Transmit_Receive_Data(SPI_Manage_Object->SPI_Handler, CS_GPIO_Port, CS_Pin, Activate_Pin_State, 1 + BMI088_GYRO_SPI_RX_RESERVED, Rx_Length);
+    SPI_Transmit_Receive_Data(SPI_Manage_Object->SPI_Handler, CS_GPIO_Port, CS_Pin, Activate_Pin_State, 1 + BMI088_ACCEL_SPI_RX_RESERVED, Rx_Length);
 }
 
 /**

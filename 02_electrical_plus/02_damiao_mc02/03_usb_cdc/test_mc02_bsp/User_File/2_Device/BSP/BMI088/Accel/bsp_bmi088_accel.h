@@ -85,15 +85,15 @@ protected:
     // 常量
 
     // 读取寄存器时需要设置的掩码
-    const uint8_t BMI088_GYRO_READ_MASK = 0x80;
+    const uint8_t BMI088_ACCEL_READ_MASK = 0x80;
     // 读数据模式下, SPI发送数据完毕后还需再发送1字节的保留字节, 该字节在SPI接收数据时会被忽略
-    const uint8_t BMI088_GYRO_SPI_RX_RESERVED = 1;
+    const uint8_t BMI088_ACCEL_SPI_RX_RESERVED = 1;
     // 初始化指令数
     const uint8_t BMI088_ACCEL_INIT_INSTRUCTION_NUM = 6;
     // 加速度计量程, 默认±24g
     const Enum_BSP_BMI088_Accel_Range BMI088_ACCEL_RANGE = BMI088_ACCEL_RANGE_24G;
     // 寄存器配置相关
-    const uint8_t BMI088_GYRO_REGISTER_CONFIG[6][2] = {
+    const uint8_t BMI088_ACCEL_REGISTER_CONFIG[6][2] = {
         // 开启加速度计电源
         {offsetof(Struct_BMI088_Accel_Register, ACC_PWR_CTRL_RW), 0x04},
         // 将加速度计从默认挂起状态0x03改为工作状态0x00
