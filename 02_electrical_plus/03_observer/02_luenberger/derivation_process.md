@@ -58,15 +58,13 @@ $$
 
 - ==规范一下符号, 极其重要!!!==
 
-  对于传感器测得的数据, 我们用breve来表示这是个瞬时量, 如$\breve x$
+  - 关于模型与融合
+  - 对于过程模型估计出的数据, 我们用tilde来表示这是个先验估计量, 如$\tilde x$
+    - 对于测量模型估计出的数据, 我们用hat来表示这是个传感器计算得来的量, 如$\hat x$
+  - 对于数据融合后的数据, 我们用bar来表示这是个融合了过程模型和传感器噪声的加权平均过的后验估计量, 如$\bar x$
+  - 对于传感器测得的数据, 我们用breve来表示这是个瞬时量, 如$\breve x$
 
-  对于过程模型估计出的数据, 我们用tilde来表示这是个先验估计量, 如$\tilde x$
-
-  对于测量模型估计出的数据, 我们用hat来表示这是个传感器计算得来的量, 如$\hat x$
-
-  对于数据融合后的数据, 我们用bar来表示这是个融合了过程模型和传感器噪声的加权平均过的后验估计量, 如$\bar x$
-
-- 我们用过程模型和测量模型都能观测到物体的位置和速度信息, 
+- 我们用过程模型和测量模型都能观测到物体的位置和速度信息
 
   高中数学都学过数学归纳法, 我们先从0推到1, 而后再从n推到n+1, 后续小节干的就是这两件事, 而后总结一下
 
@@ -109,18 +107,16 @@ $$
   \end{pmatrix}
   $$
   
-- 对于测量模型, 求公式$\eqref{测量模型}$的逆形式, 也就是将矩阵$H$求逆矩阵, 将形如$\overrightarrow{m} = H \overrightarrow{s}$的等式改为$H^{-1}\overrightarrow{m} = \overrightarrow{s}$, 那么直接就能拿到测量模型对应的状态信息$\overrightarrow s$
+- 对于测量模型, 如果我们求公式$\eqref{测量模型}$的逆形式, 也就是将形如$\overrightarrow{m} = H \overrightarrow{s}$的等式改为$H^{-1}\overrightarrow{m} = \overrightarrow{s}$, 那么直接就能拿到测量模型对应的状态信息$\overrightarrow s$
 
-  可惜大多数的测量模型中, $H$并非一个方阵, 无法求逆矩阵
+  可惜大多数的测量模型中, $H$并非一个方阵, 无法求逆矩阵, 就像我们这次遇到的情况一样: 按理应当将等式右半部分左侧的矩阵$\begin{pmatrix}1 & 0\end{pmatrix}$求逆矩阵, 但我们办不到
 
-  > 你会算三行四列矩阵的行列式吗
-  >
   > 这里可以插个眼, 感兴趣的同学可以搜一搜 " 伪逆矩阵 " 这个概念, 会有一定的启发
-
+  
   求逆矩阵这种事情行不通了, 我们换一个思路, 一步一步来. ==注意! 一定要记住前面的上标符号的含义!!!==
 
   - 我们显然可以直接获取到位置信息
-    $$
+  $$
     \hat x_1 = \breve x_1
     $$
     而后, 将过程模型的位置信息$\tilde x_{1}$与测量模型的位置信息$\hat x_1$进行以$1-k_x$和$k_x$为权重的融合, 有
@@ -132,7 +128,7 @@ $$
     \bar x_1 = \tilde x_{1} + k_x (\hat x_1 - \tilde x_{1})
     $$
     这个形式, 就是一种互补滤波反馈修正思想的体现! 
-
+  
     > 大家可以思考一下P控制器的原理
 
     我们用系统模型估计了一个位置值$\tilde x_{1}$, 而后再基于这个值, 向传感器测得的位置值$\hat x_{1}$靠近一段距离, 得到了一个 " 更令人信服 " 的值, 也就是$\bar x_1$
@@ -144,13 +140,13 @@ $$
   - 对于速度信息, 我们是无法直接获取的, 也就是这个传感器的位置信息作为零阶信息损失了速度信息
 
     因此, 我们可以 " 形式化地 " 类比一下位置的观测方式, 直接拿位置信息来进行反馈修正
-    $$
-    \bar v_1 = \tilde v_{1} + \frac{k_v}{\Delta t} (\hat x_1 - \tilde x_{1})
+  $$
+    v_1 = \tilde v_{1} + \frac{k_v}{\Delta t} (\hat x_1 - \tilde x_{1})
     $$
     其中, $k_v$也是一个加权系数, 用不同的下角标, 只是为了区别且说明: 位置和速度的加权系数$k_x$和$k_v$可以不同
-
+  
     > 有同学可能有疑问, 为什么我们能用位置的信息来反馈给速度
-    >
+  >
     > 其实这个操作是可以理解的
     >
     > 比如: 当我们传感器反馈的位置值超过了我们根据系统模型预测的位置时, 这其实说明我们预测的速度偏低, 所以预测的位置才偏低, 因此真实的速度是比预测的速度要偏高的
@@ -196,18 +192,18 @@ $$
     $$
     \hat x_{n+1} = \breve x_{n+1}
     $$
-    而后, 将过程模型的位置信息$\tilde x_{n+1}$与测量模型的位置信息$\hat x_{n+1}$进行以$1-k$和$k$为权重的融合, 有
+    而后, 将过程模型的位置信息$\tilde x_{n+1}$与测量模型的位置信息$\hat x_{n+1}$进行以$1-k_x$和$k_x$为权重的融合, 有
     $$
-    \bar x_{n+1} = (1-k) \tilde x_{n+1} + k \hat x_{n+1}
+    \bar x_{n+1} = (1-k_x) \tilde x_{n+1} + k_x \hat x_{n+1}
     $$
     换成反馈修正思想的形式
     $$
-    x_{n+1} = \tilde x_{n+1} + k (\hat x_{n+1} - \tilde x_{n+1})
+    x_{n+1} = \tilde x_{n+1} + k_x (\hat x_{n+1} - \tilde x_{n+1})
     $$
 
   - 对于速度信息, 我们继续 " 形式化地 " 类比一下位置的观测方式
     $$
-    \bar v_{n+1} = \tilde v_{n+1} + \frac{k_v}{\Delta t} (\hat x_{n+1} - \tilde x_{n+1})
+    v_{n+1} = \tilde v_{n+1} + \frac{k_v}{\Delta t} (\hat x_{n+1} - \tilde x_{n+1})
     $$
     这就是一个 " 较优 " 的速度观测值
 
@@ -292,16 +288,14 @@ $$
   \end{align}
   $$
   
-
 - 预测过程模型
   $$
   \tilde{\overrightarrow s}_{n + 1} = \overrightarrow f(\overrightarrow s_{n}, \overrightarrow c_{n})
   $$
   
-
 - 计算测量模型
   $$
-  \hat{\overrightarrow s}_{n+1, proj} = \overrightarrow h^{-}(\overrightarrow m_{n+1})
+  \hat{\overrightarrow s}_{n+1, proj} = \overrightarrow h^{-}(\breve{\overrightarrow m}_{n+1})
   $$
   其中
 
@@ -330,7 +324,7 @@ $$
 
   - $L$就是我们要调的参数矩阵, 其行数与$\overrightarrow s$的维度一致, 列数与$\overrightarrow m$的维度一致
 
-  公式$\eqref{修正过程新说}$与$\eqref{修正过程}$在一阶近似的意义上是等价的, 也就是 " 当测量模型$\overrightarrow{h}(\overrightarrow s)$近似为一个形如$A\overrightarrow s + \overrightarrow{b}$的函数时, 这两个公式等价 " 
+  公式$\eqref{修正过程新说}$与$\eqref{修正过程}$在一阶近似的意义上是等价的, 也就是 " 当测量模型$\overrightarrow{h}(\overrightarrow s)$近似为一个形如$A\overrightarrow s + \overrightarrow{b}$的函数时, 这两个公式等价. 其中, $A$是常量矩阵, $\overrightarrow b$是常量向量 " 
 
   > 证明过程如下
   >
