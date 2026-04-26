@@ -168,7 +168,7 @@ void Class_BMI088::TIM_125us_Calculate_PeriodElapsedCallback()
         Class_Matrix_f32<4, 4> matrix_p = Namespace_ALG_Matrix::Identity<4, 4>();
         // 初始状态向量
         Class_Matrix_f32<4, 1> vector_x;
-        float init_euler[3] = {Vector_Euler_Angle[0][0], atan2f(Vector_Normalized_Accel[1][0], Vector_Normalized_Accel[2][0]), asinf(-Vector_Normalized_Accel[0][0])};
+        float init_euler[3] = {Vector_Euler_Angle[0][0], asinf(-Vector_Normalized_Accel[0][0]), atan2f(Vector_Normalized_Accel[1][0], Vector_Normalized_Accel[2][0])};
         vector_x = Namespace_ALG_Quaternion::From_Euler_Angle(Class_Matrix_f32<3, 1>(init_euler)).Get_Normalization();
 
         // 初始化EKF算法本体
@@ -580,9 +580,9 @@ void Class_BMI088::Accel_Chi_Square_Calculate()
     Class_Matrix_f32<3, 4> matrix_h_x;
     Class_Matrix_f32<3, 3> matrix_d;
 
-    vector_error = Vector_Normalized_Accel - EKF_Quaternion.Function_H(EKF_Quaternion.Vector_X, Valid_D_T);
+    vector_error = Vector_Normalized_Accel - EKF_Function_H(EKF_Quaternion.Vector_X, Valid_D_T);
 
-    matrix_h_x = EKF_Quaternion.Function_Jacobian_H_X(EKF_Quaternion.Vector_X, Valid_D_T);
+    matrix_h_x = EKF_Function_Jacobian_H_X(EKF_Quaternion.Vector_X, Valid_D_T);
 
     matrix_d = matrix_h_x * EKF_Quaternion.Matrix_P_Prior * matrix_h_x.Get_Transpose() + EKF_Quaternion.Matrix_R;
 
