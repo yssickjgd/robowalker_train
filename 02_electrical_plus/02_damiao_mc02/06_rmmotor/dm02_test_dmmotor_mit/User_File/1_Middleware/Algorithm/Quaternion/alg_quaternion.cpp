@@ -88,7 +88,8 @@ Class_Quaternion_f32 Namespace_ALG_Quaternion::Unit_Imaginary_Z()
     return (result);
 }
 
-/**brief 根据三维向量获取纯四元数
+/**
+ * @brief 根据三维向量获取纯四元数
  *
  * @param Vector 三维向量
  * @return Class_Quaternion_f32 纯四元数
@@ -100,6 +101,31 @@ Class_Quaternion_f32 Namespace_ALG_Quaternion::From_Vector(const Class_Matrix_f3
     result[1] = Vector[0][0];
     result[2] = Vector[1][0];
     result[3] = Vector[2][0];
+    return (result);
+}
+
+/**
+ * @brief 根据欧拉角获取四元数
+ *
+ * @param Euler_Angle 欧拉角, Yaw-Pitch-Roll顺序
+ * @return Class_Quaternion_f32 四元数
+ */
+Class_Quaternion_f32 Namespace_ALG_Quaternion::From_Euler_Angle(const Class_Matrix_f32<3, 1> &Euler_Angle)
+{
+    Class_Quaternion_f32 result;
+    float half_yaw = Euler_Angle[0][0] * 0.5f;
+    float half_pitch = Euler_Angle[1][0] * 0.5f;
+    float half_roll = Euler_Angle[2][0] * 0.5f;
+    float cy = cosf(half_yaw);
+    float sy = sinf(half_yaw);
+    float cp = cosf(half_pitch);
+    float sp = sinf(half_pitch);
+    float cr = cosf(half_roll);
+    float sr = sinf(half_roll);
+    result[0] = cy * cp * cr + sy * sp * sr;
+    result[1] = cy * cp * sr - sy * sp * cr;
+    result[2] = cy * sp * cr + sy * cp * sr;
+    result[3] = sy * cp * cr - cy * sp * sr;
     return (result);
 }
 

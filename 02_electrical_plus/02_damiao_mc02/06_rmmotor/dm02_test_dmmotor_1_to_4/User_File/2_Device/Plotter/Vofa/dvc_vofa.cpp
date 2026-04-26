@@ -65,6 +65,14 @@ void Class_Vofa_UART::Init(const UART_HandleTypeDef *huart, const uint8_t &__Rx_
     {
         UART_Manage_Object = &UART8_Manage_Object;
     }
+    else if (huart->Instance == UART9)
+    {
+        UART_Manage_Object = &UART9_Manage_Object;
+    }
+    else if (huart->Instance == USART10)
+    {
+        UART_Manage_Object = &UART10_Manage_Object;
+    }
 
     Rx_Variable_Num = __Rx_Variable_Assignment_Num;
     Rx_Variable_List = const_cast<char **>(__Rx_Variable_Assignment_List);

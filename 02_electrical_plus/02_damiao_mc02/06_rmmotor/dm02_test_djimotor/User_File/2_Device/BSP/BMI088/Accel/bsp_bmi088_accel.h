@@ -55,7 +55,7 @@ public:
 
     inline Class_Matrix_f32<3, 1> Get_Raw_Accel() const;
 
-    inline float Get_Heater_Enable() const;
+    inline bool Get_Heater_Enable() const;
 
     inline void Set_Target_Temperature(const float &__Target_Temperature);
 
@@ -160,8 +160,6 @@ protected:
 
 extern const float GRAVITY_ACCELERATION;
 
-extern Class_Power BSP_Power;
-
 /* Exported function declarations --------------------------------------------*/
 
 /**
@@ -199,7 +197,7 @@ inline Class_Matrix_f32<3, 1> Class_BMI088_Accel::Get_Raw_Accel() const
  *
  * @return 加热电阻使能
  */
-inline float Class_BMI088_Accel::Get_Heater_Enable() const
+inline bool Class_BMI088_Accel::Get_Heater_Enable() const
 {
     return (Heater_Enable);
 }

@@ -63,6 +63,14 @@ void Class_Powermeter_UART::Init(const UART_HandleTypeDef *huart, const uint8_t 
     {
         UART_Manage_Object = &UART8_Manage_Object;
     }
+    else if (huart->Instance == UART9)
+    {
+        UART_Manage_Object = &UART9_Manage_Object;
+    }
+    else if (huart->Instance == USART10)
+    {
+        UART_Manage_Object = &UART10_Manage_Object;
+    }
 
     Frame_Header = __Frame_Header;
 }

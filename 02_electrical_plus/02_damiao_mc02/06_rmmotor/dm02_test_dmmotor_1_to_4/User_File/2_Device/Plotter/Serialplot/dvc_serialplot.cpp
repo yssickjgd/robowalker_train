@@ -67,6 +67,14 @@ void Class_Serialplot_UART::Init(const UART_HandleTypeDef *huart, const Enum_Ser
     {
         UART_Manage_Object = &UART8_Manage_Object;
     }
+    else if (huart->Instance == UART9)
+    {
+        UART_Manage_Object = &UART9_Manage_Object;
+    }
+    else if (huart->Instance == USART10)
+    {
+        UART_Manage_Object = &UART10_Manage_Object;
+    }
 
     Checksum_8 = __Checksum_8;
     Rx_Variable_Num = __Rx_Variable_Assignment_Num;

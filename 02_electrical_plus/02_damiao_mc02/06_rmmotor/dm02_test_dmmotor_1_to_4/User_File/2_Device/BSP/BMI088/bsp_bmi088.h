@@ -24,6 +24,23 @@
 /* Exported types ------------------------------------------------------------*/
 
 /**
+ * @brief 数据处理结构体
+ *
+ */
+struct Struct_BMI088_Status
+{
+    // 数据传输状态
+    bool Ready_Flag;
+    bool Transfering_Flag;
+    bool Update_Flag;
+
+    // 数据传输时间戳
+    uint64_t Ready_Timestamp;
+    uint64_t Transfering_Timestamp;
+    uint64_t Update_Timestamp;
+};
+
+/**
  * @brief Specialized, 板载AHRS
  *
  */
@@ -53,9 +70,9 @@ public:
 
     inline Class_Matrix_f32<3, 1> Get_Gyro_Body();
 
-    inline Class_Matrix_f32<3, 1> Get_Accel();
+    inline Class_Matrix_f32<3, 1> Get_Accel_Odom();
 
-    inline Class_Matrix_f32<3, 1> Get_Gyro();
+    inline Class_Matrix_f32<3, 1> Get_Gyro_Odom();
 
     inline float Get_Accel_Chi_Square_Loss() const;
 
@@ -85,7 +102,7 @@ protected:
     // D_T超时时间阈值
     float D_T_TIMEOUT_THRESHOLD = 0.1f;
 
-    // 卡方检验残差阈值
+    // 加速度计卡方检验残差阈值
     float ACCEL_CHI_SQUARE_TEST_THRESHOLD = 5.0f;
 
     // 校正数据, 与温控有关, 温控在50℃
@@ -94,54 +111,52 @@ protected:
     // 加速度计偏置
     const float ACCEL_BIAS_DATA[3] = {0.0038458286072392397, 0.00647039594993548f, 0.014968990490337293f};
     // 陀螺仪偏置
-    const float GYRO_ZERO_OFFSET[3] = {-0.005280993487f, -0.000237223741f, -0.000647540528f};
+    const float GYRO_ZERO_OFFSET[3] = {-0.005450708363333335f, -0.0008284202383333334f, -0.0006914497383333334f};
+
+    // EKF相关参数
+    // 过程噪声协方差矩阵
+    const float EKF_Q[9] = {0.865f, 0.0f, 0.0f, 0.0f, 0.975f, 0.0f, 0.0f, 0.0f, 1.077f};
+    // 测量噪声协方差矩阵
+    const float EKF_R[9] = {0.446f, 0.0f, 0.0f, 0.0f, 0.476f, 0.0f, 0.0f, 0.0f, 0.537f};
 
     // 内部变量
 
-    // EKF初始化状态完成标志
+    // BMI088硬件初始化完成标志
+    bool Hardware_Init_Finished_Flag = false;
+    // EKF算法初始化状态完成标志
     bool EKF_Init_Finished_Flag = false;
 
-    // 初始化完成标志
-    bool Init_Finished_Flag = false;
-
-    // 数据准备好标志
-    bool Accel_Ready_Flag = false;
-    uint64_t Accel_Ready_Timestamp = 0;
-    bool Gyro_Ready_Flag = false;
-    uint64_t Gyro_Ready_Timestamp = 0;
-    bool Temperature_Ready_Flag = false;
-    // 数据传输标志
-    bool Accel_Transfering_Flag = false;
-    uint64_t Accel_Transfering_Timestamp = 0;
-    bool Gyro_Transfering_Flag = false;
-    uint64_t Gyro_Transfering_Timestamp = 0;
-    bool Temperature_Transfering_Flag = false;
-    uint64_t Temperature_Transfering_Timestamp = 0;
-    // 数据更新标志
-    bool Accel_Update_Flag = false;
-    uint64_t Accel_Update_Timestamp = 0;
-    bool Gyro_Update_Flag = false;
-    uint64_t Gyro_Update_Timestamp = 0;
-
-    // 上一次陀螺仪源数据
-    Class_Matrix_f32<3, 1> Vector_Pre_Original_Gyro;
+    // 加速度数据状态
+    Struct_BMI088_Status Accel_Status;
+    // 陀螺仪数据状态
+    Struct_BMI088_Status Gyro_Status;
+    // 温度计数据状态
+    Struct_BMI088_Status Temperature_Status;
 
     // 加速度计归一化数据
     Class_Matrix_f32<3, 1> Vector_Normalized_Accel;
+    // 上一次陀螺仪有效数据
+    Class_Matrix_f32<3, 1> Vector_Pre_Valid_Gyro;
 
-    // EKF计算时间戳
-    uint64_t EKF_Now_Timestamp = 0;
-    // 上次EKF计算时间戳
-    uint64_t EKF_Pre_Timestamp = 0;
+    // 上次有效历史数据时间戳
+    uint64_t EKF_Pre_Valid_Timestamp = 0;
 
     // 时间差
-    float D_T = 0.000125f;
+    float Valid_D_T = 0.000125f;
+
+    // 四元数加速运算所用的临时数据
+    // 纯过程模型的四元数
+    static Class_Matrix_f32<4, 1> Quaternion_Tmp;
+    // 该数据的模长倒数
+    static float Modulus_Tmp;
+    // 正交化对应的Jacobi矩阵
+    static Class_Matrix_f32<4, 4> Orthogonalization_Tmp;
 
     // 读变量
 
-    // 加速度计源数据
+    // 加速度计校正后的原始数据
     Class_Matrix_f32<3, 1> Vector_Original_Accel;
-    // 陀螺仪源数据
+    // 陀螺仪校正后的原始数据
     Class_Matrix_f32<3, 1> Vector_Original_Gyro;
 
     // 欧拉角, Yaw-Pitch-Roll顺序
@@ -158,11 +173,11 @@ protected:
     // 机体坐标系下的角速度
     Class_Matrix_f32<3, 1> Vector_Gyro_Body;
     // 大地坐标系下的加速度
-    Class_Matrix_f32<3, 1> Vector_Accel;
+    Class_Matrix_f32<3, 1> Vector_Accel_Odom;
     // 大地坐标系下的角速度
-    Class_Matrix_f32<3, 1> Vector_Gyro;
+    Class_Matrix_f32<3, 1> Vector_Gyro_Odom;
 
-    // 卡方检验值
+    // 加速度计卡方检验值
     float Accel_Chi_Square_Loss = 0.0f;
     // 处理时间
     uint64_t Calculating_Time = 0;
@@ -202,7 +217,7 @@ extern Class_BMI088 BSP_BMI088;
 /* Exported function declarations --------------------------------------------*/
 
 /**
- * @brief 获取加速度计原始数据
+ * @brief 获取加速度计校正后的原始数据
  *
  * @return 加速度计原始数据, 单位m/s²
  */
@@ -212,7 +227,7 @@ inline Class_Matrix_f32<3, 1> Class_BMI088::Get_Original_Accel() const
 }
 
 /**
- * @brief 获取陀螺仪原始数据
+ * @brief 获取陀螺仪校正后的原始数据
  *
  * @return 陀螺仪原始数据, 单位rad/s
  */
@@ -282,18 +297,18 @@ inline Class_Matrix_f32<3, 1> Class_BMI088::Get_Gyro_Body()
  * @brief 获取大地坐标系下的加速度
  *
  */
-inline Class_Matrix_f32<3, 1> Class_BMI088::Get_Accel()
+inline Class_Matrix_f32<3, 1> Class_BMI088::Get_Accel_Odom()
 {
-    return (Vector_Accel);
+    return (Vector_Accel_Odom);
 }
 
 /**
  * @brief 获取大地坐标系下的角速度
  *
  */
-inline Class_Matrix_f32<3, 1> Class_BMI088::Get_Gyro()
+inline Class_Matrix_f32<3, 1> Class_BMI088::Get_Gyro_Odom()
 {
-    return (Vector_Gyro);
+    return (Vector_Gyro_Odom);
 }
 
 /**
