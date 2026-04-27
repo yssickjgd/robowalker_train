@@ -32,11 +32,15 @@ public:
 
     inline uint32_t Get_Length() const;
 
-    inline Type Get_Front() const;
+    inline Type &Get_Front();
 
-    inline Type Get_Rear() const;
+    inline const Type &Get_Front() const;
 
-    inline void Push(const Type &__Data);
+    inline Type &Get_Rear();
+
+    inline const Type &Get_Rear() const;
+
+    inline bool Push(const Type &__Data);
 
     inline Type Pop();
 
@@ -108,7 +112,20 @@ inline uint32_t Class_Queue<Type, Max_Size>::Get_Length() const
 * @return 队首元素
 */
 template<typename Type, uint32_t Max_Size>
-inline Type Class_Queue<Type, Max_Size>::Get_Front() const
+inline Type &Class_Queue<Type, Max_Size>::Get_Front()
+{
+    return (Queue[Front]);
+}
+
+/**
+* @brief 获取队首元素
+ *
+* @tparam Type 类型
+* @tparam Max_Size 队列长度最大值
+* @return 队首元素
+*/
+template<typename Type, uint32_t Max_Size>
+inline const Type &Class_Queue<Type, Max_Size>::Get_Front() const
 {
     return (Queue[Front]);
 }
@@ -121,7 +138,20 @@ inline Type Class_Queue<Type, Max_Size>::Get_Front() const
  * @return 队尾元素
  */
 template<typename Type, uint32_t Max_Size>
-inline Type Class_Queue<Type, Max_Size>::Get_Rear() const
+inline Type &Class_Queue<Type, Max_Size>::Get_Rear()
+{
+    return (Queue[Rear]);
+}
+
+/**
+ * @brief 获取队尾元素
+ *
+ * @tparam Type 类型
+ * @tparam Max_Size 队列长度最大值
+ * @return 队尾元素
+ */
+template<typename Type, uint32_t Max_Size>
+inline const Type &Class_Queue<Type, Max_Size>::Get_Rear() const
 {
     return (Queue[Rear]);
 }
@@ -134,11 +164,11 @@ inline Type Class_Queue<Type, Max_Size>::Get_Rear() const
 * @param __Data 传入值
 */
 template<typename Type, uint32_t Max_Size>
-inline void Class_Queue<Type, Max_Size>::Push(const Type &__Data)
+inline bool Class_Queue<Type, Max_Size>::Push(const Type &__Data)
 {
     if (Length == Max_Size)
     {
-        return;
+        return (false);
     }
     else
     {
@@ -155,6 +185,7 @@ inline void Class_Queue<Type, Max_Size>::Push(const Type &__Data)
         Queue[Rear] = __Data;
         Length++;
     }
+    return (true);
 }
 
 /**
