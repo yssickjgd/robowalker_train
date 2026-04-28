@@ -18,20 +18,26 @@
 #include "Gyro/bsp_bmi088_gyro.h"
 #include "1_Middleware/Algorithm/Quaternion/alg_quaternion.h"
 #include "1_Middleware/Algorithm/Filter/EKF/alg_filter_ekf.h"
-#include "1_Middleware/Algorithm/Queue/alg_queue.h"
 
 /* Exported macros -----------------------------------------------------------*/
 
 /* Exported types ------------------------------------------------------------*/
 
 /**
- * @brief 数据缓冲队列元素, 按时间戳排序
+ * @brief 数据处理结构体
  *
  */
-struct Struct_BMI088_Buffer_Element
+struct Struct_BMI088_Status
 {
+    // 数据传输状态
+    bool Ready_Flag;
+    bool Transfering_Flag;
+    bool Update_Flag;
+
+    // 数据传输时间戳
     uint64_t Ready_Timestamp;
-    Class_Matrix_f32<3, 1> Value;
+    uint64_t Transfering_Timestamp;
+    uint64_t Update_Timestamp;
 };
 
 /**
@@ -45,11 +51,6 @@ public:
     Class_BMI088_Gyro BMI088_Gyro;
 
     Class_Filter_EKF<4, 3, 3> EKF_Quaternion;
-
-    // 数据传输队列, 按加速度计和陀螺仪的ready时间戳排序入队, 以便后续分析
-    // 队列长度开放计算方式: ceiling(传感器数据反馈频率 / 默认计算频率 + 1)
-    Class_Queue<Struct_BMI088_Buffer_Element, 10> Queue_Accel;
-    Class_Queue<Struct_BMI088_Buffer_Element, 10> Queue_Gyro;
 
     void Init();
 
@@ -83,9 +84,9 @@ public:
 
     void TIM_128ms_Calculate_PeriodElapsedCallback();
 
-    void TIM_Calculate_PeriodElapsedCallback();
+    void TIM_125us_Calculate_PeriodElapsedCallback();
 
-    void TIM_10us_Transmission_Scheduling_PeriodElapsedCallback();
+    void TIM_10us_Calculate_PeriodElapsedCallback();
 
 protected:
     // 初始化相关常量
@@ -96,7 +97,7 @@ protected:
     // 常量
 
     // 数据传输超时时间, 单位us
-    uint64_t TRANSFERING_TIMEOUT = 25;
+    uint64_t TRANSFERING_TIMEOUT = 20;
 
     // D_T超时时间阈值
     float D_T_TIMEOUT_THRESHOLD = 0.1f;
@@ -125,24 +126,23 @@ protected:
     // EKF算法初始化状态完成标志
     bool EKF_Init_Finished_Flag = false;
 
-    // 各种标志位
-    bool Accel_Ready_Flag = false;
-    bool Gyro_Ready_Flag = false;
-    bool Temperature_Ready_Flag = false;
-    bool Accel_Transfering_Flag = false;
-    bool Gyro_Transfering_Flag = false;
-    bool Temperature_Transfering_Flag = false;
+    // 加速度数据状态
+    Struct_BMI088_Status Accel_Status;
+    // 陀螺仪数据状态
+    Struct_BMI088_Status Gyro_Status;
+    // 温度计数据状态
+    Struct_BMI088_Status Temperature_Status;
 
-    // 各种时间戳
-    uint64_t Accel_Ready_Timestamp = 0;
-    uint64_t Gyro_Ready_Timestamp = 0;
-    uint64_t Temperature_Ready_Timestamp = 0;
-    uint64_t Accel_Transfering_Timestamp = 0;
-    uint64_t Gyro_Transfering_Timestamp = 0;
-    uint64_t Temperature_Transfering_Timestamp = 0;
+    // 加速度计归一化数据
+    Class_Matrix_f32<3, 1> Vector_Normalized_Accel;
+    // 上一次陀螺仪有效数据
+    Class_Matrix_f32<3, 1> Vector_Pre_Valid_Gyro;
 
     // 上次有效历史数据时间戳
     uint64_t EKF_Pre_Valid_Timestamp = 0;
+
+    // 时间差
+    float Valid_D_T = 0.000125f;
 
     // 四元数加速运算所用的临时数据
     // 纯过程模型的四元数
@@ -207,9 +207,7 @@ protected:
     // 四元数测量函数对测量噪声的雅可比矩阵
     static Class_Matrix_f32<3, 3> EKF_Function_Jacobian_H_V(const Class_Matrix_f32<4, 1> &Vector_X, const float &D_T);
 
-    void EKF_Init(const Class_Matrix_f32<3, 1> &Vector_Normalized_Accel);
-
-    void Accel_Chi_Square_Calculate(const Class_Matrix_f32<3, 1> &Vector_Normalized_Accel, const float &D_T);
+    void Accel_Chi_Square_Calculate();
 };
 
 /* Exported variables --------------------------------------------------------*/
