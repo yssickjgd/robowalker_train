@@ -103,7 +103,7 @@ protected:
     float D_T_TIMEOUT_THRESHOLD = 0.1f;
 
     // 加速度计卡方检验残差阈值
-    float ACCEL_CHI_SQUARE_TEST_THRESHOLD = 0.5f;
+    float ACCEL_CHI_SQUARE_TEST_THRESHOLD = 5.0f;
 
     // 校正数据, 与温控有关, 温控在50℃
     // 加速度计仿射矩阵源数据
@@ -143,14 +143,6 @@ protected:
 
     // 时间差
     float Valid_D_T = 0.000125f;
-
-    // 四元数加速运算所用的临时数据
-    // 纯过程模型的四元数
-    static Class_Matrix_f32<4, 1> Quaternion_Tmp;
-    // 该数据的模长倒数
-    static float Modulus_Tmp;
-    // 正交化对应的Jacobi矩阵
-    static Class_Matrix_f32<4, 4> Orthogonalization_Tmp;
 
     // 读变量
 

@@ -19,10 +19,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-Class_Matrix_f32<4, 1> Class_BMI088::Quaternion_Tmp;
-float Class_BMI088::Modulus_Tmp;
-Class_Matrix_f32<4, 4> Class_BMI088::Orthogonalization_Tmp;
-
 Class_BMI088 BSP_BMI088;
 
 /* Private function declarations ---------------------------------------------*/
@@ -37,7 +33,7 @@ void Class_BMI088::Init()
 {
     SPI_Manage_Object = &SPI2_Manage_Object;
 
-    BMI088_Accel.Init(false);
+    BMI088_Accel.Init(true);
     BMI088_Gyro.Init();
 
     // 欧拉角需要辅助初始化EKF, 第一次初始化默认Yaw是0
@@ -441,11 +437,7 @@ Class_Matrix_f32<4, 1> Class_BMI088::EKF_Function_F(const Class_Matrix_f32<4, 1>
     matrix_omega[3][2] = -Vector_U[0][0];
     matrix_omega[3][3] = 0.0f;
 
-    Quaternion_Tmp = Vector_X + 0.5f * D_T * matrix_omega * Vector_X;
-    Modulus_Tmp = 1.0f / Quaternion_Tmp.Get_Modulus<4, 1>();
-    Orthogonalization_Tmp = Modulus_Tmp * (Namespace_ALG_Matrix::Identity<4, 4>() - Modulus_Tmp * Modulus_Tmp * Quaternion_Tmp * Quaternion_Tmp.Get_Transpose());
-
-    matrix_result = Quaternion_Tmp.Get_Normalization<4, 1>();
+    matrix_result = (Vector_X + 0.5f * D_T * matrix_omega * Vector_X).Get_Normalization<4, 1>();
 
     return matrix_result;
 }
@@ -459,6 +451,9 @@ Class_Matrix_f32<4, 1> Class_BMI088::EKF_Function_F(const Class_Matrix_f32<4, 1>
 Class_Matrix_f32<4, 4> Class_BMI088::EKF_Function_Jacobian_F_X(const Class_Matrix_f32<4, 1> &Vector_X, const Class_Matrix_f32<3, 1> &Vector_U, const float &D_T)
 {
     Class_Matrix_f32<4, 4> matrix_result;
+    Class_Matrix_f32<4, 1> vector_predict;
+    Class_Matrix_f32<4, 1> vector_predict_normalized;
+    Class_Matrix_f32<4, 4> matrix_normalization_jacobi;
 
     // 角速度矩阵
     Class_Matrix_f32<4, 4> matrix_omega;
@@ -478,7 +473,13 @@ Class_Matrix_f32<4, 4> Class_BMI088::EKF_Function_Jacobian_F_X(const Class_Matri
     matrix_omega[3][1] = Vector_U[1][0];
     matrix_omega[3][2] = -Vector_U[0][0];
 
-    matrix_result = Orthogonalization_Tmp * (Namespace_ALG_Matrix::Identity<4, 4>() + 0.5f * D_T * matrix_omega);
+    // vector_predict = Vector_X + 0.5f * D_T * matrix_omega * Vector_X;
+    // vector_predict_normalized = vector_predict.Get_Normalization<4, 1>();
+    //
+    // matrix_normalization_jacobi = 1.0f / vector_predict.Get_Modulus<4, 1>() * (Namespace_ALG_Matrix::Identity<4, 4>() - vector_predict_normalized * vector_predict_normalized.Get_Transpose());
+    //
+    // matrix_result = matrix_normalization_jacobi * (Namespace_ALG_Matrix::Identity<4, 4>() + 0.5f * D_T * matrix_omega);
+    matrix_result = Namespace_ALG_Matrix::Identity<4, 4>() + 0.5f * D_T * matrix_omega;
 
     return matrix_result;
 }
@@ -493,6 +494,9 @@ Class_Matrix_f32<4, 4> Class_BMI088::EKF_Function_Jacobian_F_X(const Class_Matri
 Class_Matrix_f32<4, 3> Class_BMI088::EKF_Function_Jacobian_F_W(const Class_Matrix_f32<4, 1> &Vector_X, const Class_Matrix_f32<3, 1> &Vector_U, const float &D_T)
 {
     Class_Matrix_f32<4, 3> matrix_result;
+    Class_Matrix_f32<4, 1> vector_predict;
+    Class_Matrix_f32<4, 1> vector_predict_normalized;
+    Class_Matrix_f32<4, 4> matrix_normalization_jacobi;
 
     // 四元数矩阵
     Class_Matrix_f32<4, 3> matrix_q;
@@ -509,7 +513,32 @@ Class_Matrix_f32<4, 3> Class_BMI088::EKF_Function_Jacobian_F_W(const Class_Matri
     matrix_q[3][1] = Vector_X[1][0];
     matrix_q[3][2] = Vector_X[0][0];
 
-    matrix_result = Orthogonalization_Tmp * (0.5f * D_T * matrix_q);
+    // 角速度矩阵
+    // Class_Matrix_f32<4, 4> matrix_omega;
+    // matrix_omega[0][0] = 0.0f;
+    // matrix_omega[0][1] = -Vector_U[0][0];
+    // matrix_omega[0][2] = -Vector_U[1][0];
+    // matrix_omega[0][3] = -Vector_U[2][0];
+    // matrix_omega[1][0] = Vector_U[0][0];
+    // matrix_omega[1][1] = 0.0f;
+    // matrix_omega[1][2] = Vector_U[2][0];
+    // matrix_omega[1][3] = -Vector_U[1][0];
+    // matrix_omega[2][0] = Vector_U[1][0];
+    // matrix_omega[2][1] = -Vector_U[2][0];
+    // matrix_omega[2][2] = 0.0f;
+    // matrix_omega[2][3] = Vector_U[0][0];
+    // matrix_omega[3][0] = Vector_U[2][0];
+    // matrix_omega[3][1] = Vector_U[1][0];
+    // matrix_omega[3][2] = -Vector_U[0][0];
+    // matrix_omega[3][3] = 0.0f;
+
+    // vector_predict = Vector_X + 0.5f * D_T * matrix_omega * Vector_X;
+    // vector_predict_normalized = vector_predict.Get_Normalization<4, 1>();
+    //
+    // matrix_normalization_jacobi = 1.0f / vector_predict.Get_Modulus<4, 1>() * (Namespace_ALG_Matrix::Identity<4, 4>() - vector_predict_normalized * vector_predict_normalized.Get_Transpose());
+
+    // matrix_result = matrix_normalization_jacobi * (0.5f * D_T * matrix_q);
+    matrix_result = 0.5f * D_T * matrix_q;
 
     return matrix_result;
 }

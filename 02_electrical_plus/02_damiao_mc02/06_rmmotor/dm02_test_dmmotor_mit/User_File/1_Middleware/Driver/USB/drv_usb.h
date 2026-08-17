@@ -44,7 +44,6 @@ typedef void (*USB_Callback)(uint8_t *Buffer, uint16_t Length);
  */
 struct Struct_USB_Manage_Object
 {
-    UART_HandleTypeDef *UART_Handler;
     USB_Callback Callback_Function;
 
     // 双缓冲适配的缓冲区以及当前激活的缓冲区
