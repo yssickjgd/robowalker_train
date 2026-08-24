@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -32,6 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,6 +63,7 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -92,8 +94,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-    HAL_Delay(500);
+    if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET)
+    {
+      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+    }
+    else
+    {
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+      HAL_Delay(499);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -164,8 +173,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

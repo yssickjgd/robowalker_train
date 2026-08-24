@@ -66,6 +66,7 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -99,8 +100,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		HAL_UART_Transmit_IT(&huart1, TxData, 5);
-		HAL_Delay(1000);
+    HAL_UART_Transmit_IT(&huart1, TxData, 5);
+    HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -157,15 +158,15 @@ void SystemClock_Config(void)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
- 	if(huart==&huart1)
- 	{
-		HAL_UART_Receive_IT(&huart1, RxData, 5);
-		if(RxData[0] == '1')
-		{
-			HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-			RxData[0] = 0;
-		}
- 	}
+  if (huart == &huart1)
+  {
+    HAL_UART_Receive_IT(&huart1, RxData, 5);
+    if (RxData[0] == '1')
+    {
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+      RxData[0] = 0;
+    }
+  }
 }
 
 /* USER CODE END 4 */
@@ -184,8 +185,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

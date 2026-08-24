@@ -66,6 +66,7 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -157,10 +158,10 @@ void SystemClock_Config(void)
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
- 	if(huart==&huart1)
+ 	if (huart == &huart1)
  	{
 		HAL_UARTEx_ReceiveToIdle_IT(&huart1, RxData, 5);
-		if(RxData[0] == '1')
+		if (RxData[0] == '1')
 		{
 			HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 			RxData[0] = 0;
@@ -184,8 +185,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

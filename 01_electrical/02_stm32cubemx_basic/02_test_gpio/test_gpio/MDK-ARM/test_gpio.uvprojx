@@ -16,8 +16,8 @@
         <TargetCommonOption>
           <Device>STM32F401CCUx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.16.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32F4xx_DFP.3.1.0</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000-0x2000FFFF) IROM(0x8000000-0x803FFFF) CLOCK(25000000) FPU2 CPUTYPE("Cortex-M4") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F401CCUx$CMSIS\SVD\STM32F401x.svd</SFDFile>
+          <SFDFile>$$Device:STM32F401CCUx$CMSIS\SVD\STM32F401.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -185,6 +185,8 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -325,7 +327,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>5</v6Lang>
             <v6LangP>3</v6LangP>
@@ -351,7 +353,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -417,16 +419,6 @@
         <Group>
           <GroupName>Drivers/STM32F4xx_HAL_Driver</GroupName>
           <Files>
-            <File>
-              <FileName>stm32f4xx_hal_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_hal_tim_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c</FilePath>
-            </File>
             <File>
               <FileName>stm32f4xx_hal_rcc.c</FileName>
               <FileType>1</FileType>

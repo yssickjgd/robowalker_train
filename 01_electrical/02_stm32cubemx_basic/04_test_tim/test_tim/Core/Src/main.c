@@ -63,6 +63,7 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -88,7 +89,7 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	
-	HAL_TIM_Base_Start_IT(&htim3);
+  HAL_TIM_Base_Start_IT(&htim3);
 
   /* USER CODE END 2 */
 
@@ -152,9 +153,9 @@ void SystemClock_Config(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim==&htim3)
+	if (htim == &htim3)
 	{
-		HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	}
 }
 
@@ -174,8 +175,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

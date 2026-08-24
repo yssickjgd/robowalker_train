@@ -17,10 +17,8 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -63,6 +61,7 @@
   */
 void HAL_MspInit(void)
 {
+
   /* USER CODE BEGIN MspInit 0 */
 
   /* USER CODE END MspInit 0 */

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2017 STMicroelectronics.
+  * Copyright (c) 2016 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -162,7 +162,7 @@ typedef struct
   * @{
   */
 #define RTC_TAMPERTRIGGER_RISINGEDGE       0x00000000U
-#define RTC_TAMPERTRIGGER_FALLINGEDGE      RTC_TAFCR_TAMP1TRG
+#define RTC_TAMPERTRIGGER_FALLINGEDGE      0x00000002U
 #define RTC_TAMPERTRIGGER_LOWLEVEL         RTC_TAMPERTRIGGER_RISINGEDGE
 #define RTC_TAMPERTRIGGER_HIGHLEVEL        RTC_TAMPERTRIGGER_FALLINGEDGE
 /**
@@ -636,18 +636,6 @@ typedef struct
 #define __HAL_RTC_TAMPER_DISABLE_IT(__HANDLE__, __INTERRUPT__)       ((__HANDLE__)->Instance->TAFCR &= ~(__INTERRUPT__))
 
 /**
-  * @brief  Check whether the specified RTC Tamper interrupt has occurred or not.
-  * @param  __HANDLE__ specifies the RTC handle.
-  * @param  __INTERRUPT__ specifies the RTC Tamper interrupt to check.
-  *         This parameter can be:
-  *            @arg RTC_IT_TAMP1: Tamper 1 interrupt
-  *            @arg RTC_IT_TAMP2: Tamper 2 interrupt
-  * @note   RTC_IT_TAMP2 is not applicable to all devices.
-  * @retval None
-  */
-#define __HAL_RTC_TAMPER_GET_IT(__HANDLE__, __INTERRUPT__)       (((((__HANDLE__)->Instance->ISR) & ((__INTERRUPT__) >> 4U)) != 0U) ? 1U : 0U)
-
-/**
   * @brief  Check whether the specified RTC Tamper interrupt has been enabled or not.
   * @param  __HANDLE__ specifies the RTC handle.
   * @param  __INTERRUPT__ specifies the RTC Tamper interrupt source to check.
@@ -663,8 +651,9 @@ typedef struct
   * @param  __FLAG__ specifies the RTC Tamper flag to be checked.
   *          This parameter can be:
   *             @arg RTC_FLAG_TAMP1F: Tamper 1 interrupt flag
-  *             @arg RTC_FLAG_TAMP2F: Tamper 2 interrupt flag
-  * @note   RTC_FLAG_TAMP2F is not applicable to all devices.
+  *             @arg RTC_FLAG_TAMP2F: Tamper 2 interrupt flag (*)
+  *
+  *         (*) value not applicable to all devices.
   * @retval None
   */
 #define __HAL_RTC_TAMPER_GET_FLAG(__HANDLE__, __FLAG__)               (((((__HANDLE__)->Instance->ISR) & (__FLAG__)) != 0U)? 1U : 0U)
@@ -675,8 +664,9 @@ typedef struct
   * @param  __FLAG__ specifies the RTC Tamper Flag to clear.
   *          This parameter can be:
   *             @arg RTC_FLAG_TAMP1F: Tamper 1 interrupt flag
-  *             @arg RTC_FLAG_TAMP2F: Tamper 2 interrupt flag
-  * @note   RTC_FLAG_TAMP2F is not applicable to all devices.
+  *             @arg RTC_FLAG_TAMP2F: Tamper 2 interrupt flag (*)
+  *
+  *         (*) value not applicable to all devices.
   * @retval None
   */
 #define __HAL_RTC_TAMPER_CLEAR_FLAG(__HANDLE__, __FLAG__)         ((__HANDLE__)->Instance->ISR) = (~((__FLAG__) | RTC_ISR_INIT)|((__HANDLE__)->Instance->ISR & RTC_ISR_INIT))
@@ -705,13 +695,13 @@ typedef struct
   * @brief  Enable event on the RTC Tamper and Timestamp associated EXTI line.
   * @retval None.
   */
-#define __HAL_RTC_TAMPER_TIMESTAMP_EXTI_ENABLE_EVENT()    (EXTI->EMR |= RTC_EXTI_LINE_TAMPER_TIMESTAMP_EVENT)
+#define __HAL_RTC_TAMPER_TIMESTAMP_EXTI_ENABLE_EVENT()     (EXTI->EMR |= RTC_EXTI_LINE_TAMPER_TIMESTAMP_EVENT)
 
 /**
   * @brief  Disable event on the RTC Tamper and Timestamp associated EXTI line.
   * @retval None.
   */
-#define __HAL_RTC_TAMPER_TIMESTAMP_EXTI_DISABLE_EVENT()   (EXTI->EMR &= ~RTC_EXTI_LINE_TAMPER_TIMESTAMP_EVENT)
+#define __HAL_RTC_TAMPER_TIMESTAMP_EXTI_DISABLE_EVENT()    (EXTI->EMR &= ~RTC_EXTI_LINE_TAMPER_TIMESTAMP_EVENT)
 
 /**
   * @brief  Enable falling edge trigger on the RTC Tamper and Timestamp associated EXTI line.
@@ -916,7 +906,7 @@ HAL_StatusTypeDef HAL_RTCEx_DisableBypassShadow(RTC_HandleTypeDef *hrtc);
   * @{
   */
 /* Extended RTC features functions *******************************************/
-void HAL_RTCEx_AlarmBEventCallback(RTC_HandleTypeDef *hrtc);
+void              HAL_RTCEx_AlarmBEventCallback(RTC_HandleTypeDef *hrtc);
 HAL_StatusTypeDef HAL_RTCEx_PollForAlarmBEvent(RTC_HandleTypeDef *hrtc, uint32_t Timeout);
 /**
   * @}
