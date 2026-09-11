@@ -159,7 +159,7 @@ void Class_BMI088::TIM_125us_Calculate_PeriodElapsedCallback()
 
         // EKF相关变量与函数
         Class_Matrix_f32<3, 3> matrix_q(EKF_Q);
-        Class_Matrix_f32<3, 3> matrix_r(EKF_R);
+        Class_Matrix_f32<3, 3> matrix_r(Class_Matrix_f32<3, 3>(ACCEL_AFFINE_DATA) * Class_Matrix_f32<3, 3>(EKF_R) * Class_Matrix_f32<3, 3>(ACCEL_AFFINE_DATA).Get_Transpose());
         // 初始状态协方差矩阵
         Class_Matrix_f32<4, 4> matrix_p = Namespace_ALG_Matrix::Identity<4, 4>();
         // 初始状态向量
