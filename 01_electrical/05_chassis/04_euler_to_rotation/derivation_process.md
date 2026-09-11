@@ -826,9 +826,9 @@ $$
 > $$
 > 根据上一题, 我们的底盘旋转矩阵已知, 也就是矩阵$C$是已知的
 >
-> 利用高中数学知识, 求$\overrightarrow{c_z}$  ( 也就是矩阵$C$的第三列分量) 对世界坐标系下xOy平面的夹角 ( 这个夹角也就是斜坡的Pitch角$\beta_{S}$ ) 
+> 利用高中数学知识, 求$\overrightarrow{c_z}$  ( 也就是矩阵$C$的第三列分量) 对世界坐标系下xOy平面法向量的夹角 ( 这个夹角也就是斜坡的Pitch角$\beta_{S}$ ) 
 > $$
-> \beta_{S} = \arctan(\frac{-\sqrt{c_{zx}^2 + c_{zy}^2}}{c_{zz}})
+> \beta_{S} = -\arctan(\frac{\sqrt{c_{zx}^2 + c_{zy}^2}}{c_{zz}})
 > 
 > \label{pitch角已知}
 > $$
