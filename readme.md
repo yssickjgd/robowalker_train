@@ -130,7 +130,6 @@
     3. 观测器篇 ( observer )
        1.  ==观测器概述==
        2.  ==Luenberger观测器==
-       3.  Kalman滤波器概述
        4.  Kalman滤波器之矩阵分析基础
        5.  Kalman滤波器之概率统计基础
        6.  Kalman滤波器优化电机反馈速度
