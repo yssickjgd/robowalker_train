@@ -145,7 +145,7 @@ $$
 
   - 这个$G$矩阵, 在Kalman滤波器中, 叫做状态增益矩阵
     - 已有Kalman滤波器基础的同学可能更熟悉另一个矩阵, 也就是观测增益矩阵$K$
-    - 观测增益矩阵将在下一节课进行讲解
+    - 用$G$还是$K$表达融合公式都是等价的, 用观测增益矩阵$K$的表达形式将在下一节课进行讲解
   - 接下来我们就需要用一种方式来设计最优的$G$矩阵, 让这个$G$变得有数学依据起来
 
 - 既然我们的$G$矩阵是每一步每一步迭代算出来, 而且时刻保持更新的, 因此就不能像Luenberger观测器一样写死了, 因此也需要有一个角标
@@ -230,7 +230,7 @@ $$
   )
   $$
   
-  将带噪测量模型$\eqref{带噪测量模型}$和测量模型$\eqref{测量模型}$代代入到上式, 整理, 有
+  将带噪测量模型$\eqref{带噪测量模型}$和测量模型$\eqref{测量模型}$代入到上式, 整理, 有
   $$
   \bar{\overrightarrow{e}}_{n+1} = (I - G_{n+1})(\begin{pmatrix}
   x_{n+1} \\
@@ -251,11 +251,11 @@ $$
   \end{pmatrix} - \begin{pmatrix}
   \bar x_{n} \\
   \bar v_{n}
-  \end{pmatrix}) + \overrightarrow{w}_{n+1}) - G_{n+1} \overrightarrow{v}_{n+1}
+  \end{pmatrix}) + \overrightarrow{w}_{n}) - G_{n+1} \overrightarrow{v}_{n+1}
   $$
   也就是
   $$
-  \bar{\overrightarrow{e}}_{n+1} = (I - G_{n+1})(\begin{pmatrix} 1 & 0.001 \\ 0 & 1\end{pmatrix} \bar{\overrightarrow{e}}_{n} + \overrightarrow{w}_{n+1}) - G_{n+1} \overrightarrow{v}_{n+1}
+  \bar{\overrightarrow{e}}_{n+1} = (I - G_{n+1})(\begin{pmatrix} 1 & 0.001 \\ 0 & 1\end{pmatrix} \bar{\overrightarrow{e}}_{n} + \overrightarrow{w}_{n}) - G_{n+1} \overrightarrow{v}_{n+1}
   $$
   上式看起来虽然直观, 但不利于推演, 因为它是三个随机向量线性叠加共同作用的结果
   
@@ -263,7 +263,7 @@ $$
   
   - 第一步, 预测步骤, 在上一步后验误差基础上, 引入过程模型的随机性误差
     $$
-    \tilde{\overrightarrow e}_{n+1} = \begin{pmatrix} 1 & 0.001 \\ 0 & 1 \end{pmatrix} \bar{\overrightarrow{e}}_{n} + \overrightarrow{w}_{n+1}
+    \tilde{\overrightarrow e}_{n+1} = \begin{pmatrix} 1 & 0.001 \\ 0 & 1 \end{pmatrix} \bar{\overrightarrow{e}}_{n} + \overrightarrow{w}_{n}
     \label{先验误差计算公式}
     $$
   
@@ -308,7 +308,7 @@ $$
 
   这一小节, 我们要研究$\tilde{\overrightarrow e}_{n+1}$的协方差矩阵
   $$
-  \tilde{\overrightarrow e}_{n+1} = \begin{pmatrix} 1 & 0.001 \\ 0 & 1\end{pmatrix} \bar{\overrightarrow{e}}_{n} + \overrightarrow{w}_{n+1}
+  \tilde{\overrightarrow e}_{n+1} = \begin{pmatrix} 1 & 0.001 \\ 0 & 1\end{pmatrix} \bar{\overrightarrow{e}}_{n} + \overrightarrow{w}_{n}
   $$
 
 - 根据独立正态分布的线性叠加公式, 该随机向量也是一个正态分布, 且期望为$\overrightarrow{0}$, 协方差矩阵为
@@ -346,41 +346,46 @@ $$
 
 - 最终, 摆一下本节课Kalman滤波器优化电机反馈速度的迭代递推公式, 已知$\bar x_0, \bar v_0, \bar P_{0}$
 
-  - 预测过程
-    $$
-    \begin{pmatrix}\tilde x_{n+1} \\\tilde v_{n+1}\end{pmatrix} = \begin{pmatrix}1 & 0.001 \\0 & 1\end{pmatrix} \begin{pmatrix}\bar x_{n} \\\bar v_{n}\end{pmatrix}
-    $$
-
-  - 先验误差估计
-    $$
+  - predict
+    
+    - 预测过程
+      $$
+  \begin{pmatrix}\tilde x_{n+1} \\\tilde v_{n+1}\end{pmatrix} = \begin{pmatrix}1 & 0.001 \\0 & 1\end{pmatrix} \begin{pmatrix}\bar x_{n} \\\bar v_{n}\end{pmatrix}
+      $$
+    
+    - 先验误差估计
+      $$
     \tilde P_{n+1} = \begin{pmatrix} 1 & 0.001 \\ 0 & 1\end{pmatrix} \bar P_{n} \begin{pmatrix} 1 & 0.001 \\ 0 & 1\end{pmatrix}^T + Q
+      $$
+    
+  - update
+  
+    - 计算增益
+    
+      $$
+      G_{n+1} = \tilde P_{n+1} (R+\tilde P_{n+1})^{-1}
     $$
-
-  - 计算增益
-    $$
-    G_{n+1} = \tilde P_{n+1} (R+\tilde P_{n+1})^{-1}
-    $$
-
-  - 修正过程
-    $$
-    \begin{pmatrix}
-    \bar x_{n+1} \\
-    \bar v_{n+1}
-    \end{pmatrix} = \begin{pmatrix}
-    \tilde x_{n+1} \\
-    \tilde v_{n+1}
-    \end{pmatrix} + G_{n+1} (\begin{pmatrix}
-    \hat x_{n+1} \\
-    \hat v_{n+1}
+  
+    - 修正过程
+      $$
+      \begin{pmatrix}
+      \bar x_{n+1} \\
+      \bar v_{n+1}
+      \end{pmatrix} = \begin{pmatrix}
+      \tilde x_{n+1} \\
+      \tilde v_{n+1}
+      \end{pmatrix} + G_{n+1} (\begin{pmatrix}
+      \hat x_{n+1} \\
+      \hat v_{n+1}
     \end{pmatrix} - \begin{pmatrix}
-    \tilde x_{n+1} \\
-    \tilde v_{n+1}
-    \end{pmatrix})
-    $$
+      \tilde x_{n+1} \\
+      \tilde v_{n+1}
+      \end{pmatrix})
+      $$
 
-  - 后验误差估计
-    $$
-    \bar P_{n+1}= (I-G_{n+1})\tilde P_{n+1}(I-G_{n+1})^T + G_{n+1}RG_{n+1}^T
-    $$
-
+    - 后验误差估计
+      $$
+      \bar P_{n+1}= (I-G_{n+1})\tilde P_{n+1}(I-G_{n+1})^T + G_{n+1}RG_{n+1}^T
+      $$
+  
   - 一步一步走, 一环扣一环, 最终实现了Kalman滤波器的功能

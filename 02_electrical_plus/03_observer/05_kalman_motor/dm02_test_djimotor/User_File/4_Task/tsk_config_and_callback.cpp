@@ -222,14 +222,17 @@ void Task_Init()
     H[0][1] = 0.0f;
     H[1][0] = 0.0f;
     H[1][1] = 1.0f;
+
     Q[0][0] = 0.1f;
     Q[0][1] = 0.0f;
     Q[1][0] = 0.0f;
     Q[1][1] = 0.1f;
-    R[0][0] = 0.000767f;
+
+    R[0][0] = 0.001f;
     R[0][1] = 0.0f;
     R[1][0] = 0.0f;
-    R[1][1] = 0.105f;
+    R[1][1] = 0.1f;
+
     P[0][0] = 1.0f;
     P[0][1] = 0.0f;
     P[1][0] = 0.0f;
@@ -242,6 +245,8 @@ void Task_Init()
     HAL_TIM_Base_Start_IT(&htim6);
     HAL_TIM_Base_Start_IT(&htim7);
     HAL_TIM_Base_Start_IT(&htim8);
+
+    Namespace_SYS_Timestamp::Delay_Second(5);
 
     // 标记初始化完成
     init_finished = true;
