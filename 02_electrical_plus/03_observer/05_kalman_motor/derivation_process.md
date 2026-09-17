@@ -364,28 +364,27 @@ $$
     
       $$
       G_{n+1} = \tilde P_{n+1} (R+\tilde P_{n+1})^{-1}
-    $$
-  
+      $$
+    
     - 修正过程
       $$
       \begin{pmatrix}
-      \bar x_{n+1} \\
-      \bar v_{n+1}
-      \end{pmatrix} = \begin{pmatrix}
-      \tilde x_{n+1} \\
-      \tilde v_{n+1}
-      \end{pmatrix} + G_{n+1} (\begin{pmatrix}
-      \hat x_{n+1} \\
-      \hat v_{n+1}
-    \end{pmatrix} - \begin{pmatrix}
-      \tilde x_{n+1} \\
-      \tilde v_{n+1}
-      \end{pmatrix})
+        \bar x_{n+1} \\
+        \bar v_{n+1}
+        \end{pmatrix} = \begin{pmatrix}
+        \tilde x_{n+1} \\
+        \tilde v_{n+1}
+        \end{pmatrix} + G_{n+1} (\begin{pmatrix}
+        \hat x_{n+1} \\
+        \hat v_{n+1}
+      \end{pmatrix} - \begin{pmatrix}
+        \tilde x_{n+1} \\
+        \tilde v_{n+1}
+        \end{pmatrix})
       $$
-
+    
     - 后验误差估计
       $$
       \bar P_{n+1}= (I-G_{n+1})\tilde P_{n+1}(I-G_{n+1})^T + G_{n+1}RG_{n+1}^T
       $$
-  
   - 一步一步走, 一环扣一环, 最终实现了Kalman滤波器的功能

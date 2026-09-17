@@ -10,15 +10,15 @@
 
 >   配套教学视频
 >
->   https://space.bilibili.com/337732684/channel/collectiondetail?sid=1043942
+>   https://space.bilibili.com/337732684/lists/1043942
 >
 >   环境配置安装包
 >
 >   http://home.ustc.edu.cn/~yssickjgd
 >
->   配套代码与其他相关资料 ( 内容完全一致, 根据网络状况酌情下载. 由于Gitee平台有容量限制, 但本仓库容量较大, 因此该项目于202308242000转移至Github以及中国科大Linux用户协会校内Gitlab平台中. 原Gitee链接仍有效, 只是不保持更新 )
+>   配套代码与其他相关资料 ( 内容完全一致, 根据网络状况酌情下载. 由于Gitee平台有容量限制, 但本仓库容量较大, 因此该项目于202308242000转移至Github以及中国科大校内Gitlab平台中. 原Gitee链接仍有效, 只是不保持更新 )
 >
->   https://git.lug.ustc.edu.cn/yssickjgd/robowalker_train
+>   https://git.ustc.edu.cn/yssickjgd/robowalker_train
 >
 >   https://github.com/yssickjgd/robowalker_train
 >
@@ -130,12 +130,11 @@
     3. 观测器篇 ( observer )
        1.  ==观测器概述==
        2.  ==Luenberger观测器==
-       4.  Kalman滤波器之矩阵分析基础
-       5.  Kalman滤波器之概率统计基础
-       6.  Kalman滤波器优化电机反馈速度
+       4.  ==Kalman滤波器之矩阵分析基础==
+       5.  ==Kalman滤波器之概率统计基础==
+       6.  ==Kalman滤波器优化电机反馈速度==
        7.  Kalman滤波器之原理篇
        8.  扩展Kalman滤波器
-       9.  Joseph形式更新协方差矩阵
        10.  总结与致谢
        11.  番外篇 常见的信号预处理方法
        12.  番外篇 频选滤波器概述
@@ -269,7 +268,7 @@
 
 ## 3 致谢与参考
 
-1. 感谢 **中国科学技术大学 RoboWalker战队** 一路走来的伙伴们, 感谢**中国科学技术大学学生Linux用户协会**提供的代码托管平台支持!
+1. 感谢 **中国科学技术大学 RoboWalker战队** 一路走来的伙伴们, 感谢**中国科学技术大学学生Linux用户协会, 网络信息中心**提供的代码托管平台支持!
 
 2. 特别鸣谢 **哈尔滨工业大学 ( 威海 ) HERO战队 李赫** 同学, **防灾科技学院 思玄战队 赵子淇** 同学 对本系列电控教程的批评与指导
 
